@@ -9,7 +9,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <!-- AOS Animation Library -->
     <link href="aos.css" rel="stylesheet">
     <script src="aos.js"></script>
@@ -80,8 +80,27 @@
     </style>
 </head>
 <body class="font-sans text-gray-800 bg-white">
+    <!-- 自定义标题栏 -->
+    <div id="titlebar" class="fixed w-full top-0 z-50 h-10 bg-primary flex items-center justify-between px-4 text-white">
+        <div class="drag-region flex items-center" style="-webkit-app-region: drag; width: calc(100% - 100px);">
+            <img src="logo.ico" alt="Ruanm Logo" class="h-6 w-6 mr-2">
+            <span class="text-sm font-bold">Ruanm</span>
+        </div>
+        <div class="window-controls flex space-x-2" style="-webkit-app-region: no-drag;">
+            <button id="minimize-btn" class="w-8 h-8 flex items-center justify-center hover:bg-blue-600 transition-colors">
+                <i class="fa fa-minus text-sm"></i>
+            </button>
+            <button id="maximize-btn" class="w-8 h-8 flex items-center justify-center hover:bg-blue-600 transition-colors">
+                <i class="fa fa-square text-sm"></i>
+            </button>
+            <button id="close-btn" class="w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors">
+                <i class="fa fa-times text-sm"></i>
+            </button>
+        </div>
+    </div>
+    
     <!-- 导航栏 -->
-    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+    <nav id="navbar" class="fixed w-full top-10 z-40 transition-all duration-300">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-3">
                 <!-- Logo -->
@@ -304,39 +323,6 @@
         </div>
     </section>
 
-<!-- 下载桌面版区域 -->
-    <section class="py-16 md:py-24 bg-light">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16" data-aos="fade-up">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">下载桌面版</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    获取 Ruanm 官网的桌面应用程序，享受更便捷的浏览体验
-                </p>
-            </div>
-            
-            <div class="max-w-4xl mx-auto">
-                <div class="bg-white rounded-lg shadow-lg p-8 text-center" data-aos="fade-up">
-                    <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fa fa-desktop text-primary text-4xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">Ruanm 官网桌面版</h3>
-                    <p class="text-gray-600 mb-6">
-                        专为 Windows 设计的桌面应用程序，提供更快的访问速度和更好的用户体验。
-                    </p>
-                    <a href="https://github.com/RuanMingze/Ruanm-Official-Website/releases/download/v1.0.0/Ruanm.Official.Website.Setup.1.0.0.exe" 
-                       class="inline-block bg-primary hover:bg-dark text-white font-medium py-3 px-8 rounded-md transition-all-300 text-lg"
-                       target="_blank">
-                        <i class="fa fa-download mr-2"></i>立即下载
-                    </a>
-                    <div class="mt-4 text-sm text-gray-500">
-                        <p>版本：1.0.0</p>
-                        <p>支持系统：Windows 7 及以上版本</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
     <!-- 团队介绍 -->
     <section class="py-16 md:py-24 bg-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -513,9 +499,9 @@
             mobileMenuButton.addEventListener('click', function() {
                 mobileMenu.classList.toggle('hidden');
                 const icon = mobileMenuButton.querySelector('i');
-                if (mobileMenu。classList。contains('hidden')) {
-                    icon.classList。remove('fa-times');
-                    icon.classList。add('fa-bars');
+                if (mobileMenu.classList.contains('hidden')) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
                 } else {
                     icon.classList.remove('fa-bars');
                     icon.classList.add('fa-times');
@@ -523,19 +509,19 @@
             });
             
             // 返回顶部按钮
-            const backToTopButton = document。getElementById('back-to-top');
+            const backToTopButton = document.getElementById('back-to-top');
             
-            window.addEventListener('scroll'， function() {
-                if (window。scrollY > 300) {
-                    backToTopButton.classList。remove('opacity-0'， 'invisible');
-                    backToTopButton.classList.add('opacity-100'， 'visible');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
                 } else {
-                    backToTopButton.classList。remove('opacity-100'， 'visible');
-                    backToTopButton.classList。add('opacity-0'， 'invisible');
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                    backToTopButton.classList.add('opacity-0', 'invisible');
                 }
             });
             
-            backToTopButton.addEventListener('click'， function() {
+            backToTopButton.addEventListener('click', function() {
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
@@ -544,10 +530,10 @@
             
             // 平滑滚动
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click'， function(e) {
+                anchor.addEventListener('click', function(e) {
                     e.preventDefault();
                     
-                    const targetId = this。getAttribute('href');
+                    const targetId = this.getAttribute('href');
                     if (targetId === '#') return;
                     
                     const targetElement = document.querySelector(targetId);
@@ -558,16 +544,43 @@
                         
                         // 如果是移动端，点击后关闭菜单
                         if (!mobileMenu.classList.contains('hidden')) {
-                            mobileMenu.classList。add('hidden');
-                            const icon = mobileMenuButton。querySelector('i');
-                            icon.classList。remove('fa-times');
-                            icon.classList。add('fa-bars');
+                            mobileMenu.classList.add('hidden');
+                            const icon = mobileMenuButton.querySelector('i');
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
                         }
                     }
                 });
             });
+            // 窗口控制按钮功能
+            const minimizeBtn = document.getElementById('minimize-btn');
+            const maximizeBtn = document.getElementById('maximize-btn');
+            const closeBtn = document.getElementById('close-btn');
+            
+            if (minimizeBtn) {
+                minimizeBtn.addEventListener('click', () => {
+                    if (window.electronAPI && typeof window.electronAPI.minimizeWindow === 'function') {
+                        window.electronAPI.minimizeWindow();
+                    }
+                });
+            }
+            
+            if (maximizeBtn) {
+                maximizeBtn.addEventListener('click', () => {
+                    if (window.electronAPI && typeof window.electronAPI.maximizeWindow === 'function') {
+                        window.electronAPI.maximizeWindow();
+                    }
+                });
+            }
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    if (window.electronAPI && typeof window.electronAPI.closeWindow === 'function') {
+                        window.electronAPI.closeWindow();
+                    }
+                });
+            }
         });
     </script>
 </body>
 </html>
-
