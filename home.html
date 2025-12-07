@@ -513,9 +513,9 @@
             mobileMenuButton.addEventListener('click', function() {
                 mobileMenu.classList.toggle('hidden');
                 const icon = mobileMenuButton.querySelector('i');
-                if (mobileMenu.classList.contains('hidden')) {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
+                if (mobileMenu。classList。contains('hidden')) {
+                    icon.classList。remove('fa-times');
+                    icon.classList。add('fa-bars');
                 } else {
                     icon.classList.remove('fa-bars');
                     icon.classList.add('fa-times');
@@ -523,19 +523,19 @@
             });
             
             // 返回顶部按钮
-            const backToTopButton = document.getElementById('back-to-top');
+            const backToTopButton = document。getElementById('back-to-top');
             
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 300) {
-                    backToTopButton.classList.remove('opacity-0', 'invisible');
-                    backToTopButton.classList.add('opacity-100', 'visible');
+            window.addEventListener('scroll'， function() {
+                if (window。scrollY > 300) {
+                    backToTopButton.classList。remove('opacity-0'， 'invisible');
+                    backToTopButton.classList.add('opacity-100'， 'visible');
                 } else {
-                    backToTopButton.classList.remove('opacity-100', 'visible');
-                    backToTopButton.classList.add('opacity-0', 'invisible');
+                    backToTopButton.classList。remove('opacity-100'， 'visible');
+                    backToTopButton.classList。add('opacity-0'， 'invisible');
                 }
             });
             
-            backToTopButton.addEventListener('click', function() {
+            backToTopButton.addEventListener('click'， function() {
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
@@ -544,10 +544,10 @@
             
             // 平滑滚动
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
+                anchor.addEventListener('click'， function(e) {
                     e.preventDefault();
                     
-                    const targetId = this.getAttribute('href');
+                    const targetId = this。getAttribute('href');
                     if (targetId === '#') return;
                     
                     const targetElement = document.querySelector(targetId);
@@ -558,10 +558,10 @@
                         
                         // 如果是移动端，点击后关闭菜单
                         if (!mobileMenu.classList.contains('hidden')) {
-                            mobileMenu.classList.add('hidden');
-                            const icon = mobileMenuButton.querySelector('i');
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
+                            mobileMenu.classList。add('hidden');
+                            const icon = mobileMenuButton。querySelector('i');
+                            icon.classList。remove('fa-times');
+                            icon.classList。add('fa-bars');
                         }
                     }
                 });
@@ -569,6 +569,4 @@
         });
     </script>
 </body>
-
 </html>
-
