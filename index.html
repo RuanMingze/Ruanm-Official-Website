@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面找错了！- Ruanm</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="logo.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .redirect-card {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .btn-primary {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 120, 212, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 120, 212, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-4">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white redirect-card">
+                <div class="p-8 text-center">
+                    <div class="flex justify-center mb-6">
+                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+                        </div>
+                    </div>
+                    
+                    <h1 class="text-3xl font-bold text-gray-800 mb-4">哎呀，您找错页面了！</h1>
+                    
+                    <p class="text-gray-600 mb-2">
+                        您当前访问的是 <strong>index.html</strong> 页面，
+                    </p>
+                    <p class="text-gray-600 mb-8">
+                        但这不是我们的官方网站首页。
+                    </p>
+                    
+                    <div class="bg-blue-50 rounded-lg p-6 mb-8">
+                        <p class="text-gray-700 mb-4">
+                            <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                            我们的官方网站首页是 <strong>home.html</strong>
+                        </p>
+                        <p class="text-gray-600 text-sm">
+                            点击下方按钮前往正确的首页
+                        </p>
+                    </div>
+                    
+                    <a href="home.html" class="btn-primary inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg text-lg">
+                        <i class="fas fa-arrow-right mr-2"></i>前往首页
+                    </a>
+                
+            <div class="mt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2025 Ruanm. 保留所有权利。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
