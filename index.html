@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruanm - 用户体验至上</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="logo.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0078d4',
+                        secondary: '#e6e6e6',
+                        dark: '#005a9e',
+                        light: '#f2f2f2',
+                        accent: '#00a8e8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'system-ui', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0078d4;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #005a9e;
+        }
+        
+        /* 导航栏滚动效果 */
+        .navbar-fixed {
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center">
+                        <img src="logo.ico" alt="Ruanm Logo" class="h-8 w-8 mr-2">
+                        <span class="text-primary text-2xl font-bold">Ruanm</span>
+                    </a>
+                </div>
+                
+                <!-- 桌面导航菜单 -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-700 hover:text-primary transition-all-300 font-medium">首页</a>
+                    <a href="games.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">游戏中心</a>
+                    <a href="#products" class="text-gray-700 hover:text-primary transition-all-300 font-medium">产品中心</a>
+                    <a href="developer.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">开发者中心</a>
+                    <a href="#philosophy" class="text-gray-700 hover:text-primary transition-all-300 font-medium">设计理念</a>
+                    <a href="#contact" class="text-gray-700 hover:text-primary transition-all-300 font-medium">联系我们</a>
+                </div>
+                
+                <!-- 菜单按钮 -->
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden text-gray-700 hover:text-primary transition-all-300" id="mobile-menu-button">
+                        <i class="fa fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 移动端导航菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <a href="#" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">首页</a>
+                <a href="games.html" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">游戏中心</a>
+                <a href="#products" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">产品中心</a>
+                <a href="developer.html" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">开发者中心</a>
+                <a href="#philosophy" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">设计理念</a>
+                <a href="#contact" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">联系我们</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section class="relative bg-gradient-blue text-white pt-24 pb-16 md:pt-32 md:pb-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <!-- 左侧内容 -->
+                <div class="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right" data-aos-duration="1000">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                        用户体验至上<br>设计哲学
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 text-blue-100">
+                        我们专注于创造简单、美观、实用的软件产品，让每一位用户都能享受到卓越的数字体验
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#products" class="bg-white text-primary hover:bg-blue-50 transition-all-300 font-medium py-3 px-6 rounded-md text-center text-lg">
+                            探索产品
+                        </a>
+                        <a href="#philosophy" class="bg-transparent border-2 border-white text-white hover:bg-white hover:bg-opacity-10 transition-all-300 font-medium py-3 px-6 rounded-md text-center text-lg">
+                            设计理念
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 右侧预览图 -->
+                <div class="md:w-1/2" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="relative">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/bf9f9940eb67476fb082c0aaaf8b4f90~tplv-a9rns2rl98-image.image?rcl=20251129115138A9E8D9C49499325B433A&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766980319&x-signature=YPEHsMg%2FPdjU8RRMEW%2FED1%2BDY%2Bw%3D" 
+                             alt="设计理念预览" 
+                             class="rounded-lg shadow-xl w-full max-w-lg mx-auto animate-float">
+                        <div class="absolute -bottom-4 -right-4 bg-white text-primary px-4 py-2 rounded-md shadow-lg hidden md:block">
+                            <span class="font-medium">用户体验至上</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 波浪效果 -->
+        <div class="absolute bottom-0 left-0 w-full overflow-hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="w-full h-auto">
+                <path fill="#ffffff" fill-opacity="1" d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,80C1248,75,1344,53,1392,42.7L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- 设计理念 -->
+    <section id="philosophy" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">我们的设计理念</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    以用户为中心，追求极致的体验设计
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 理念卡片 1 -->
+                <div class="bg-light rounded-lg p-6 hover:shadow-lg transition-all-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-user-circle text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">用户至上</h3>
+                    <p class="text-gray-600">
+                        始终将用户需求放在首位，深入了解用户痛点，创造真正有价值的解决方案
+                    </p>
+                </div>
+                
+                <!-- 理念卡片 2 -->
+                <div class="bg-light rounded-lg p-6 hover:shadow-lg transition-all-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-paint-brush text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">简约美学</h3>
+                    <p class="text-gray-600">
+                        追求简洁优雅的设计风格，去除冗余元素，让产品既美观又易于使用
+                    </p>
+                </div>
+                
+                <!-- 理念卡片 3 -->
+                <div class="bg-light rounded-lg p-6 hover:shadow-lg transition-all-300" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-cogs text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">功能实用</h3>
+                    <p class="text-gray-600">
+                        注重产品的实用性，每个功能都为解决实际问题而设计，避免华而不实
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mt-16 bg-gradient-blue rounded-lg p-8 text-white" data-aos="fade-up" data-aos-delay="400">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-2/3 mb-6 md:mb-0">
+                        <h3 class="text-2xl font-bold mb-4">用户体验至上的核心原则</h3>
+                        <p class="text-blue-100 mb-4">
+                            我们相信，优秀的产品应该让用户感到愉悦和便捷。因此，我们在设计每一个产品时都遵循以下原则：
+                        </p>
+                        <ul class="list-disc list-inside text-blue-100 space-y-2">
+                            <li>直观易懂的操作流程</li>
+                            <li>清晰明确的界面布局</li>
+                            <li>快速响应的交互反馈</li>
+                            <li>个性化定制的灵活选项</li>
+                            <li>稳定可靠的性能表现</li>
+                        </ul>
+                    </div>
+                    <div class="md:w-1/3 flex justify-center">
+                        <div class="bg-white bg-opacity-20 rounded-full w-48 h-48 flex items-center justify-center">
+                            <span class="text-5xl font-bold">UX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品区域 -->
+    <section id="products" class="py-16 md:py-24 bg-light">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">我们的产品</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    基于用户体验至上理念打造的精品软件
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- 产品卡片1 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row" data-aos="fade-up">
+                    <div class="md:w-2/5">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/57f4c58e2703496ea6b4cc8fbe542a25~tplv-a9rns2rl98-image.image?rcl=20251129115138A9E8D9C49499325B433A&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766980319&x-signature=arKoCE%2BF7xib6i4d4uR00uaeo7A%3D" 
+                             alt="Ruanm屏保程序" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="md:w-3/5 p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2">Ruanm 屏保程序</h3>
+                            <p class="text-gray-600 mb-4">
+                                专为Windows用户设计的个性化屏保程序，提供丰富的动态壁纸和自定义选项，让您的电脑屏幕焕发独特魅力。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-primary text-xs px-3 py-1 rounded-full">屏保软件</span>
+                                <span class="bg-blue-100 text-primary text-xs px-3 py-1 rounded-full">动态壁纸</span>
+                                <span class="bg-blue-100 text-primary text-xs px-3 py-1 rounded-full">个性化</span>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="program.html" class="inline-block bg-primary hover:bg-dark text-white font-medium py-2 px-6 rounded-md transition-all-300">
+                                了解详情
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 产品卡片2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row" data-aos="fade-up" data-aos-delay="100">
+                    <div class="md:w-2/5">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/bf9f9940eb67476fb082c0aaaf8b4f90~tplv-a9rns2rl98-image.image?rcl=20251129115138A9E8D9C49499325B433A&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766980319&x-signature=YPEHsMg%2FPdjU8RRMEW%2FED1%2BDY%2Bw%3D" 
+                             alt="阮铭泽工具箱" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="md:w-3/5 p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2">阮铭泽工具箱</h3>
+                            <p class="text-gray-600 mb-4">
+                                集天气查询、计算器、编程工具、系统知识于一体的多功能Windows桌面应用程序，提升您的工作效率。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">工具箱</span>
+                                <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">多功能</span>
+                                <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">实用工具</span>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="toolbox.html" class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-md transition-all-300">
+                                了解详情
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 团队介绍 -->
+    <section class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">我们的员工</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    热爱技术和设计的专业人士，致力于创造卓越的用户体验
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-light rounded-lg p-8" data-aos="fade-up">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/4 mb-6 md:mb-0 flex justify-center">
+                            <div class="bg-gray-200 border-2 border-dashed rounded-xl w-32 h-32 flex items-center justify-center">
+                                <i class="fa fa-user text-4xl text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div class="md:w-3/4 md:pl-8 text-center md:text-left">
+                            <h3 class="text-2xl font-bold mb-2">Ruan M.</h3>
+                            <p class="text-primary font-medium mb-4">创始人 & 首席设计师</p>
+                            <p class="text-gray-600">
+                                拥有多年软件开发和用户体验设计经验，始终坚持"用户体验至上"的设计理念。
+                                致力于通过技术创新和精心设计，为用户创造简单、美观、实用的软件产品。
+                                我们正在努力将Ruanm发展成为一家专业的软件公司，为更多用户提供优质的产品和服务。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section id="contact" class="py-16 md:py-24 bg-gradient-blue text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">联系我们</h2>
+                <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+                    如果您有任何问题或建议，欢迎随时与我们联系
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg p-8" data-aos="fade-up">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-6">联系信息</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <i class="fa fa-envelope text-xl mr-4 mt-1"></i>
+                                    <span>xmt20160124@outlook.com</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-github text-xl mr-4 mt-1"></i>
+                                    <span>Github.com/RuanMingze</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-map-marker text-xl mr-4 mt-1"></i>
+                                    <span>中国</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-6">关注我们</h3>
+                            <p class="text-blue-100 mb-6">
+                                关注我们的社交媒体账号，获取最新产品动态和更新信息
+                            </p>
+                            <div class="flex space-x-4">
+                                <a href="https://github.com/RuanMingze/" class="bg-white bg-opacity-20 hover:bg-opacity-30 w-12 h-12 rounded-full flex items-center justify-center transition-all-300">
+                                    <i class="fa fa-github text-xl"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 品牌信息 -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="logo.ico" alt="Ruanm Logo" class="h-10 w-10 mr-3">
+                        <h4 class="text-xl font-bold">Ruanm</h4>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        致力于创造简单、美观、实用的软件产品，我们正在努力将Ruanm发展成为一家专业的软件公司。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/RuanMingze/" class="text-gray-400 hover:text-white transition-all-300">
+                            <i class="fa fa-github fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">快速链接</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-all-300">首页</a></li>
+                        <li><a href="#products" class="text-gray-400 hover:text-white transition-all-300">产品中心</a></li>
+                        <li><a href="#philosophy" class="text-gray-400 hover:text-white transition-all-300">设计理念</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-all-300">联系我们</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 产品 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">产品</h4>
+                    <ul class="space-y-2">
+                        <li><a href="program.html" class="text-gray-400 hover:text-white transition-all-300">Ruanm 屏保程序</a></li>
+                        <li><a href="toolbox.html" class="text-gray-400 hover:text-white transition-all-300">阮铭泽工具箱</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系方式 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">联系方式</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope text-primary mr-3"></i>
+                            <span>xmt20160124@outlook.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-github text-primary mr-3"></i>
+                            <span>Github.com/RuanMingze</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Ruanm. 保留所有权利。由 Ruan Mingze 开发
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-primary hover:bg-dark text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all-300 opacity-0 invisible">
+        <i class="fa fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 初始化AOS动画库
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // 导航栏滚动效果
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('navbar-fixed');
+                } else {
+                    navbar.classList.remove('navbar-fixed');
+                }
+            });
+            
+            // 移动端菜单切换
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+                const icon = mobileMenuButton.querySelector('i');
+                if (mobileMenu.classList.contains('hidden')) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                } else {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            });
+            
+            // 返回顶部按钮
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                        
+                        // 如果是移动端，点击后关闭菜单
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                            const icon = mobileMenuButton.querySelector('i');
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
