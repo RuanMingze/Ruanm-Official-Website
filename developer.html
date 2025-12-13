@@ -180,71 +180,32 @@
                 </p>
             </div>
             
-            <!-- 注册表单区域 -->
-            <div id="register-form-container" class="max-w-2xl mx-auto bg-light rounded-lg p-8" data-aos="fade-up">
-                <form id="developer-register-form">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-2" for="first-name">名字</label>
-                            <input type="text" id="first-name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入您的名字" required>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-2" for="last-name">姓氏</label>
-                            <input type="text" id="last-name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入您的姓氏" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-gray-700 font-medium mb-2" for="email">邮箱地址</label>
-                        <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入您的邮箱地址" required>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-gray-700 font-medium mb-2" for="company">公司/组织名称</label>
-                        <input type="text" id="company" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入您的公司或组织名称">
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-gray-700 font-medium mb-2" for="website">网站</label>
-                        <input type="url" id="website" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="https://example.com">
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-gray-700 font-medium mb-2">开发者类型</label>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <label class="flex items-center">
-                                <input type="radio" name="developer-type" value="individual" class="mr-2" checked>
-                                <span>个人开发者</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="developer-type" value="company" class="mr-2">
-                                <span>企业开发者</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="developer-type" value="student" class="mr-2">
-                                <span>学生开发者</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center mb-6">
-                        <input type="checkbox" id="terms" class="mr-2" required>
-                        <label for="terms" class="text-gray-700">我同意 <a href="#" class="text-primary hover:underline">开发者协议</a> 和 <a href="#" class="text-primary hover:underline">隐私政策</a></label>
-                    </div>
-                    
-                    <button type="submit" class="w-full bg-primary hover:bg-dark text-white font-medium py-3 px-6 rounded-md transition-all-300">
+            <!-- 未登录或非开发者用户提示 -->
+            <div id="non-developer-message" class="max-w-2xl mx-auto bg-yellow-50 border border-yellow-200 rounded-lg p-8 text-center hidden" data-aos="fade-up">
+                <div class="text-yellow-600 mb-4">
+                    <i class="fa fa-exclamation-triangle text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-yellow-700 mb-2">访问受限</h3>
+                <p class="text-gray-600 mb-4">
+                    您需要登录开发者账号才能访问此功能。如果您还没有开发者账号，请先注册。
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="login.html" class="bg-primary hover:bg-dark text-white font-medium py-2 px-6 rounded-md transition-all-300">
+                        登录现有账号
+                    </a>
+                    <a href="register.html" class="bg-secondary hover:bg-gray-300 text-gray-800 font-medium py-2 px-6 rounded-md transition-all-300">
                         注册开发者账号
-                    </button>
-                </form>
+                    </a>
+                </div>
             </div>
             
-            <!-- 注册成功后显示的账号信息区域 -->
-            <div id="account-info-container" class="max-w-2xl mx-auto bg-light rounded-lg p-8 hidden" data-aos="fade-up">
+            <!-- 开发者账号信息区域 -->
+            <div id="developer-account-info" class="max-w-2xl mx-auto bg-light rounded-lg p-8 hidden" data-aos="fade-up">
                 <div class="text-center mb-6">
                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fa fa-check text-green-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-green-600">🎉注册成功！</h3>
+                    <h3 class="text-2xl font-bold text-green-600">🎉开发者账号已注册</h3>
                     <p class="text-gray-600 mt-2">欢迎加入 Ruanm 开发者中心</p>
                 </div>
                 
@@ -252,26 +213,22 @@
                     <h4 class="text-xl font-bold mb-4">开发者账号信息</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <p class="text-gray-600 text-sm">姓名</p>
-                            <p id="display-name" class="font-medium"></p>
+                            <p class="text-gray-600 text-sm">用户名</p>
+                            <p id="developer-username" class="font-medium"></p>
                         </div>
                         <div>
                             <p class="text-gray-600 text-sm">邮箱地址</p>
-                            <p id="display-email" class="font-medium"></p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm">公司/组织</p>
-                            <p id="display-company" class="font-medium">-</p>
+                            <p id="developer-email" class="font-medium"></p>
                         </div>
                         <div>
                             <p class="text-gray-600 text-sm">注册时间</p>
-                            <p id="display-registered-at" class="font-medium"></p>
+                            <p id="developer-created-at" class="font-medium"></p>
                         </div>
                         <div>
                             <p class="text-gray-600 text-sm">API密钥</p>
                             <div class="flex items-center">
-                                <input type="password" id="display-api-key" class="font-medium break-all px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary w-auto min-w-[200px]" style="width: fit-content;" readonly>
-                                <button id="copy-api-key" class="bg-primary hover:bg-dark text-white font-medium py-2 px-4 rounded-r-md transition-all-300 whitespace-nowrap">
+                                <input type="password" id="developer-api-key" class="font-medium break-all px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary w-auto min-w-[200px]" style="width: fit-content;" readonly>
+                                <button id="copy-developer-api-key" class="bg-primary hover:bg-dark text-white font-medium py-2 px-4 rounded-r-md transition-all-300 whitespace-nowrap">
                                     复制
                                 </button>
                             </div>
@@ -307,9 +264,6 @@
                             <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/57f4c58e2703496ea6b4cc8fbe542a25~tplv-a9rns2rl98-image.image?rcl=20251129115138A9E8D9C49499325B433A&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766980319&x-signature=arKoCE%2BF7xib6i4d4uR00uaeo7A%3D" 
                                  alt="Ruanm OAuth" 
                                  class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                                <span class="text-white text-xl font-bold bg-black bg-opacity-70 px-4 py-2 rounded-md">正在开发中</span>
-                            </div>
                         </div>
                         <div class="md:w-3/5 p-6 flex flex-col justify-between">
                             <div>
@@ -323,10 +277,10 @@
                                     <span class="bg-blue-100 text-primary text-xs px-3 py-1 rounded-full">API访问</span>
                                 </div>
                             </div>
-                            <div>
-                                <button class="inline-block bg-gray-400 text-white font-medium py-2 px-6 rounded-md cursor-not-allowed w-full" disabled>
-                                    配置 (开发中)
-                                </button>
+                            <div class="flex space-x-2">
+                                <a href="oauth-client-example.html" class="inline-block bg-primary hover:bg-dark text-white font-medium py-2 px-4 rounded-md transition-all-300 flex-1 text-center">
+                                    配置 OAuth
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -386,10 +340,7 @@
                             <p class="text-gray-600 text-sm mb-4">
                                 从零开始学习如何使用Ruanm API
                             </p>
-                            <a href="#" class="text-primary hover:underline font-medium">查看文档 →</a>
-                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-                                <span class="text-white text-xl font-bold">敬请期待</span>
-                            </div>
+                            <a href="api-documentation.html#introduction" class="text-primary hover:underline font-medium">查看文档 →</a>
                         </div>
                         
                         <!-- 文档卡片 2 -->
@@ -401,10 +352,7 @@
                             <p class="text-gray-600 text-sm mb-4">
                                 详细的API端点和参数说明
                             </p>
-                            <a href="#" class="text-primary hover:underline font-medium">查看文档 →</a>
-                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-                                <span class="text-white text-xl font-bold">敬请期待</span>
-                            </div>
+                            <a href="api-documentation.html#users" class="text-primary hover:underline font-medium">查看文档 →</a>
                         </div>
                         
                         <!-- 文档卡片 3 -->
@@ -416,10 +364,7 @@
                             <p class="text-gray-600 text-sm mb-4">
                                 实用的代码片段和最佳实践
                             </p>
-                            <a href="#" class="text-primary hover:underline font-medium">查看示例 →</a>
-                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-                                <span class="text-white text-xl font-bold">敬请期待</span>
-                            </div>
+                            <a href="api-documentation.html#examples" class="text-primary hover:underline font-medium">查看示例 →</a>
                         </div>
                     </div>
                 </div>
@@ -445,7 +390,7 @@
                             <p class="text-blue-100 mb-6">
                                 与其他开发者交流经验，分享项目成果，获取技术支持。
                             </p>
-                            <a href="#" class="inline-block bg-white text-primary hover:bg-blue-50 font-medium py-2 px-6 rounded-md transition-all-300">
+                            <a href="https://teams.live.com/l/community/FBA6Av9UPytPH-BJAI" class="inline-block bg-white text-primary hover:bg-blue-50 font-medium py-2 px-6 rounded-md transition-all-300">
                                 访问论坛
                             </a>
                         </div>
@@ -500,10 +445,10 @@
                 <div>
                     <h4 class="text-lg font-bold mb-4">开发资源</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-all-300">Ruanm OAuth</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-all-300">Ruanm Studio</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-all-300">API文档</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-all-300">代码示例</a></li>
+                        <li><a href="oauth-client-example.html" class="text-gray-400 hover:text-white transition-all-300">Ruanm OAuth</a></li>
+                        <li><a href="Studio.html" class="text-gray-400 hover:text-white transition-all-300">Ruanm Studio</a></li>
+                        <li><a href="api-documentation.html" class="text-gray-400 hover:text-white transition-all-300">API文档</a></li>
+                        <li><a href="api-documentation.html#examples" class="text-gray-400 hover:text-white transition-all-300">代码示例</a></li>
                     </ul>
                 </div>
                 
@@ -618,25 +563,23 @@
             });
             
             // 开发者注册表单提交
-            const registerForm = document.getElementById('developer-register-form');
-            const registerFormContainer = document.getElementById('register-form-container');
-            const accountInfoContainer = document.getElementById('account-info-container');
+            const nonDeveloperMessage = document.getElementById('non-developer-message');
+            const developerAccountInfo = document.getElementById('developer-account-info');
             
-            // 显示账号信息
-            function displayAccountInfo(info) {
-                document.getElementById('display-name').textContent = info.firstName + ' ' + info.lastName;
-                document.getElementById('display-email').textContent = info.email;
-                document.getElementById('display-company').textContent = info.company || '-';
+            // 显示开发者账号信息
+            function displayDeveloperAccountInfo(userInfo) {
+                document.getElementById('developer-username').textContent = userInfo.username;
+                document.getElementById('developer-email').textContent = userInfo.email;
                 
                 // 格式化注册时间
-                const registeredDate = new Date(info.registeredAt);
-                const formattedDate = registeredDate.toLocaleDateString('zh-CN') + ' ' + registeredDate.toLocaleTimeString('zh-CN', {hour12: false});
-                document.getElementById('display-registered-at').textContent = formattedDate;
+                const createdDate = new Date(userInfo.created_at);
+                const formattedDate = createdDate.toLocaleDateString('zh-CN') + ' ' + createdDate.toLocaleTimeString('zh-CN', {hour12: false});
+                document.getElementById('developer-created-at').textContent = formattedDate;
                 
                 // 显示API密钥
-                if (info.apiKey) {
-                    const apiKeyInput = document.getElementById('display-api-key');
-                    apiKeyInput.value = info.apiKey;
+                if (userInfo.api_key) {
+                    const apiKeyInput = document.getElementById('developer-api-key');
+                    apiKeyInput.value = userInfo.api_key;
                     // 动态调整输入框宽度
                     adjustInputWidth(apiKeyInput);
                 }
@@ -670,9 +613,9 @@
             }
             
             // 复制API密钥到剪贴板
-            function copyAPIKey() {
-                const apiKeyInput = document.getElementById('display-api-key');
-                const copyButton = document.getElementById('copy-api-key');
+            function copyDeveloperAPIKey() {
+                const apiKeyInput = document.getElementById('developer-api-key');
+                const copyButton = document.getElementById('copy-developer-api-key');
                 const originalText = copyButton.textContent;
                 
                 // 使用现代Clipboard API
@@ -696,96 +639,56 @@
                 });
             }
             
-            // 生成随机API密钥
-            function generateAPIKey() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                let apiKey = 'rk_';
-                for (let i = 0; i < 32; i++) {
-                    apiKey += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                return apiKey;
-            }
-            
-            // 如果没有找到API密钥，则生成一个新的
-            function ensureAPIKeyExists(info) {
-                if (!info.apiKey) {
-                    info.apiKey = generateAPIKey();
-                    try {
-                        localStorage.setItem('ruanmDeveloper', JSON.stringify(info));
-                    } catch (e) {
-                        console.warn('无法更新开发者信息:', e);
-                    }
-                }
-                return info;
-            }
-            
-            // 检查是否已经注册过开发者账号
-            function checkDeveloperRegistration() {
-                const developerInfo = localStorage.getItem('ruanmDeveloper');
-                if (developerInfo) {
-                    let info = JSON.parse(developerInfo);
-                    // 确保有API密钥
-                    info = ensureAPIKeyExists(info);
-                    displayAccountInfo(info);
-                    registerFormContainer.classList.add('hidden');
-                    accountInfoContainer.classList.remove('hidden');
-                }
-            }
-            
-            // 页面加载时检查注册状态
-            checkDeveloperRegistration();
-            
-            // 添加复制按钮事件监听器
-            const copyApiKeyButton = document.getElementById('copy-api-key');
-            if (copyApiKeyButton) {
-                copyApiKeyButton.addEventListener('click', copyAPIKey);
-            }
-            
-            if (registerForm) {
-                registerForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
+            // 检查用户登录状态并显示相应内容
+            async function checkUserStatus() {
+                // 检查用户登录状态
+                const user = localStorage.getItem('user');
+                if (user) {
+                    const userData = JSON.parse(user);
                     
-                    // 获取表单数据
-                    const firstName = document.getElementById('first-name').value;
-                    const lastName = document.getElementById('last-name').value;
-                    const email = document.getElementById('email').value;
-                    const company = document.getElementById('company').value;
-                    
-                    // 简单验证（这里可以随意输入都能注册）
-                    if (firstName && lastName && email) {
-                        // 生成API密钥
-                        const apiKey = generateAPIKey();
-                        
-                        // 保存开发者信息到本地存储
-                        const developerInfo = {
-                            firstName: firstName,
-                            lastName: lastName,
-                            email: email,
-                            company: company,
-                            registeredAt: new Date().toISOString(),
-                            apiKey: apiKey
-                        };
-                        
+                    // 如果是开发者账号，显示开发者账号信息
+                    if (userData.role === 'developer') {
                         try {
-                            localStorage.setItem('ruanmDeveloper', JSON.stringify(developerInfo));
+                            // 从后端获取最新的用户信息
+                            const response = await fetch(`http://localhost:3000/api/users/${userData.id}`);
+                            const result = await response.json();
                             
-                            // 显示账号信息，隐藏注册表单
-                            displayAccountInfo(developerInfo);
-                            registerFormContainer.classList.add('hidden');
-                            accountInfoContainer.classList.remove('hidden');
-                            
-                            // 滚动到账号信息区域
-                            accountInfoContainer.scrollIntoView({ behavior: 'smooth' });
-                        } catch (e) {
-                            console.warn('无法保存开发者信息:', e);
-                            alert('注册成功！（本地存储不可用）');
+                            if (response.ok) {
+                                displayDeveloperAccountInfo(result);
+                                nonDeveloperMessage.classList.add('hidden');
+                                developerAccountInfo.classList.remove('hidden');
+                            } else {
+                                console.error('获取用户信息失败:', result.message);
+                                // 显示错误信息
+                                nonDeveloperMessage.classList.remove('hidden');
+                                developerAccountInfo.classList.add('hidden');
+                            }
+                        } catch (error) {
+                            console.error('网络错误:', error);
+                            // 显示错误信息
+                            nonDeveloperMessage.classList.remove('hidden');
+                            developerAccountInfo.classList.add('hidden');
                         }
                     } else {
-                        alert('请填写必填字段！');
+                        // 如果不是开发者账号，显示提示信息
+                        nonDeveloperMessage.classList.remove('hidden');
+                        developerAccountInfo.classList.add('hidden');
                     }
-                });
+                } else {
+                    // 未登录用户，显示提示信息
+                    nonDeveloperMessage.classList.remove('hidden');
+                    developerAccountInfo.classList.add('hidden');
+                }
             }
-        });
+            
+            // 页面加载时检查用户状态
+            checkUserStatus();
+            
+            // 添加复制按钮事件监听器
+            const copyDeveloperApiKeyButton = document.getElementById('copy-developer-api-key');
+            if (copyDeveloperApiKeyButton) {
+                copyDeveloperApiKeyButton.addEventListener('click', copyDeveloperAPIKey);
+            }        });
     </script>
 </body>
 </html>

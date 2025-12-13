@@ -13,7 +13,9 @@
     <!-- AOS Animation Library -->
     <link href="aos.css" rel="stylesheet">
     <script src="aos.js"></script>
-    
+    <!-- 引入API服务 -->
+    <script src="api.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -93,20 +95,45 @@
                 </div>
                 
                 <!-- 桌面导航菜单 -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#" class="text-gray-700 hover:text-primary transition-all-300 font-medium">首页</a>
-                    <a href="games.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">游戏中心</a>
-                    <a href="#products" class="text-gray-700 hover:text-primary transition-all-300 font-medium">产品中心</a>
-                    <a href="developer.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">开发者中心</a>
-                    <a href="#philosophy" class="text-gray-700 hover:text-primary transition-all-300 font-medium">设计理念</a>
-                    <a href="#contact" class="text-gray-700 hover:text-primary transition-all-300 font-medium">联系我们</a>
+                <div class="hidden md:flex items-center justify-center flex-grow">
+                    <div class="flex space-x-8">
+                        <a href="#" class="text-gray-700 hover:text-primary transition-all-300 font-medium">首页</a>
+                        <a href="games.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">游戏中心</a>
+                        <a href="#products" class="text-gray-700 hover:text-primary transition-all-300 font-medium">产品中心</a>
+                        <a href="developer.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">开发者中心</a>
+                        <a href="#philosophy" class="text-gray-700 hover:text-primary transition-all-300 font-medium">设计理念</a>
+                        <a href="#contact" class="text-gray-700 hover:text-primary transition-all-300 font-medium">联系我们</a>
+                    </div>
                 </div>
                 
-                <!-- 菜单按钮 -->
-                <div class="flex items-center space-x-4">
-                    <button class="md:hidden text-gray-700 hover:text-primary transition-all-300" id="mobile-menu-button">
-                        <i class="fa fa-bars text-lg"></i>
-                    </button>
+                <!-- 登录/注册按钮 -->
+                <div class="md:flex items-center space-x-4" id="auth-buttons">
+                    <a href="login.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">登录</a>
+                    <a href="register.html" class="bg-primary hover:bg-dark text-white px-4 py-2 rounded-md transition-all-300 font-medium">注册</a>
+                </div>
+                
+                <!-- 用户信息显示 -->
+                <div class="hidden md:flex items-center space-x-4" id="user-info">
+                    <img id="navbar-user-avatar" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDFkMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItdXNlciI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNC00VjVhMiAyIDAgMCAxIDItMmgxNGEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJ6Ij48L3BhdGg+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxMiAxNSAxNSAxOCI+PC9wb2x5bGluZT48cGF0aCBkPSJNMTIgMTFTMTQgMTQgMTQgMTQiPjwvcGF0aD48L3N2Zz4=" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                    <span class="text-gray-700 font-medium" id="welcome-message"></span>
+                    <a href="#" onclick="showLogoutModal()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-all-300 font-medium">注销</a>
+                </div>
+                
+                <!-- 移动端登录/注册按钮 -->
+                <div class="flex items-center space-x-4" id="mobile-auth-buttons">
+                    <div class="md:hidden flex items-center space-x-2">
+                        <a href="login.html" class="text-gray-700 hover:text-primary transition-all-300 text-sm">登录</a>
+                        <a href="register.html" class="bg-primary hover:bg-dark text-white px-3 py-1 rounded transition-all-300 text-sm">注册</a>
+                    </div>
+                </div>
+                
+                <!-- 移动端用户信息显示 -->
+                <div class="hidden md:hidden flex items-center space-x-4" id="mobile-user-info">
+                    <div class="flex items-center space-x-2">
+                        <img id="mobile-navbar-user-avatar" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDFkMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItdXNlciI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNC00VjVhMiAyIDAgMCAxIDItMmgxNGEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJ6Ij48L3BhdGg+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxMiAxNSAxNSAxOCI+PC9wb2x5bGluZT48cGF0aCBkPSJNMTIgMTFTMTQgMTQgMTQgMTQiPjwvcGF0aD48L3N2Zz4=" alt="用户头像" class="w-6 h-6 rounded-full object-cover">
+                        <span class="text-gray-700 font-medium text-sm" id="mobile-welcome-message"></span>
+                        <a href="#" onclick="showLogoutModal()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-all-300 text-sm">注销</a>
+                    </div>
                 </div>
             </div>
             
@@ -118,6 +145,20 @@
                 <a href="developer.html" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">开发者中心</a>
                 <a href="#philosophy" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">设计理念</a>
                 <a href="#contact" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">联系我们</a>
+                <div class="border-t border-gray-200 my-2"></div>
+                <!-- 未登录时显示 -->
+                <div id="mobile-auth-links">
+                    <a href="login.html" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">登录</a>
+                    <a href="register.html" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">注册</a>
+                </div>
+                <!-- 已登录时显示 -->
+                <div id="mobile-user-section" class="hidden">
+                    <div class="py-2 flex items-center space-x-2">
+                        <img id="mobile-menu-user-avatar" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDFkMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItdXNlciI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNC00VjVhMiAyIDAgMCAxIDItMmgxNGEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJ6Ij48L3BhdGg+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxMiAxNSAxNSAxOCI+PC9wb2x5bGluZT48cGF0aCBkPSJNMTIgMTFTMTQgMTQgMTQgMTQiPjwvcGF0aD48L3N2Zz4=" alt="用户头像" class="w-6 h-6 rounded-full object-cover">
+                        <span class="text-gray-700 font-medium" id="mobile-menu-welcome-message"></span>
+                    </div>
+                    <a href="#" onclick="showLogoutModal()" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">注销</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -440,12 +481,21 @@
                 <!-- 快速链接 -->
                 <div>
                     <h4 class="text-lg font-bold mb-4">快速链接</h4>
-                    <ul class="space-y-2">
+                    <ul class="space-y-2" id="footer-links">
                         <li><a href="#" class="text-gray-400 hover:text-white transition-all-300">首页</a></li>
                         <li><a href="#products" class="text-gray-400 hover:text-white transition-all-300">产品中心</a></li>
                         <li><a href="#philosophy" class="text-gray-400 hover:text-white transition-all-300">设计理念</a></li>
                         <li><a href="#contact" class="text-gray-400 hover:text-white transition-all-300">联系我们</a></li>
+                        <li><a href="login.html" class="text-gray-400 hover:text-white transition-all-300" id="footer-login-link">登录</a></li>
+                        <li><a href="register.html" class="text-gray-400 hover:text-white transition-all-300" id="footer-register-link">注册</a></li>
                     </ul>
+                    <!-- 已登录时显示 -->
+                    <div id="footer-user-section" class="hidden">
+                        <ul class="space-y-2">
+                            <li><span class="text-gray-400" id="footer-welcome-message"></span></li>
+                            <li><a href="#" onclick="showLogoutModal()" class="text-gray-400 hover:text-white transition-all-300">注销</a></li>
+                        </ul>
+                    </div>
                 </div>
                 
                 <!-- 产品 -->
@@ -473,10 +523,25 @@
                 </div>
             </div>
             
-            <div class="mt-12 pt-8 border-t border-gray-800 text-center">
-                <p class="text-gray-400">
-                    &copy; 2025 Ruanm. 保留所有权利。由 Ruan Mingze 开发
-                </p>
+            <div class="border-t border-gray-800 pt-8 mt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <p class="text-gray-400">
+                            &copy; 2025 Ruanm. 保留所有权利。由 Ruan Mingze 开发
+                        </p>
+                    </div>
+                    <!-- 未登录时显示 -->
+                    <div class="flex space-x-4" id="footer-links">
+                        <a href="login.html" class="text-gray-400 hover:text-white transition-all-300">登录</a>
+                        <a href="register.html" class="text-gray-400 hover:text-white transition-all-300">注册</a>
+                    </div>
+                    <!-- 已登录时显示 -->
+                    <div class="hidden items-center space-x-4" id="footer-user-section">
+                        <img id="footer-user-avatar" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDFkMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItdXNlciI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNC00VjVhMiAyIDAgMCAxIDItMmgxNGEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJ6Ij48L3BhdGg+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxMiAxNSAxNSAxOCI+PC9wb2x5bGluZT48cGF0aCBkPSJNMTIgMTFTMTQgMTQgMTQgMTQiPjwvcGF0aD48L3N2Zz4=" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                        <span class="text-gray-400" id="footer-welcome-message"></span>
+                        <a href="#" onclick="showLogoutModal()" class="text-gray-400 hover:text-white transition-all-300">注销</a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
@@ -488,6 +553,12 @@
 
     <!-- JavaScript -->
     <script>
+        // 播放成功音效函数
+        function playSuccessSound() {
+            const audio = new Audio('succss.mp3');
+            audio.play().catch(e => console.log('音频播放失败:', e));
+        }
+        
         // 初始化AOS动画库
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({
@@ -506,21 +577,8 @@
                 }
             });
             
-            // 移动端菜单切换
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            // 移动端菜单
             const mobileMenu = document.getElementById('mobile-menu');
-            
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.toggle('hidden');
-                const icon = mobileMenuButton.querySelector('i');
-                if (mobileMenu.classList.contains('hidden')) {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                } else {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                }
-            });
             
             // 返回顶部按钮
             const backToTopButton = document.getElementById('back-to-top');
@@ -559,14 +617,277 @@
                         // 如果是移动端，点击后关闭菜单
                         if (!mobileMenu.classList.contains('hidden')) {
                             mobileMenu.classList.add('hidden');
-                            const icon = mobileMenuButton.querySelector('i');
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
                         }
                     }
                 });
             });
+            
+            // 检查用户登录状态并更新界面
+            function checkUserStatus() {
+                const user = localStorage.getItem('user');
+                
+                if (user) {
+                    const userData = JSON.parse(user);
+                    
+                    // 设置默认头像 - 与用户中心保持一致
+                    const defaultAvatar = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDFkMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItdXNlciI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNC00VjVhMiAyIDAgMCAxIDItMmgxNGEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJ6Ij48L3BhdGg+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxMiAxNSAxNSAxOCI+PC9wb2x5bGluZT48cGF0aCBkPSJNMTIgMTFTMTQgMTQgMTQgMTQiPjwvcGF0aD48L3N2Zz4=';
+                    
+                    // 更新导航栏
+                    document.getElementById('auth-buttons').classList.remove('md:flex');
+                    document.getElementById('auth-buttons').classList.add('hidden');
+                    document.getElementById('user-info').classList.remove('hidden');
+                    document.getElementById('welcome-message').textContent = `欢迎, ${userData.username}`;
+                    
+                    // 更新导航栏头像 - 使用与用户中心相同的逻辑
+                    document.getElementById('navbar-user-avatar').src = userData.avatar || defaultAvatar;
+                    
+                    // 为欢迎消息添加点击事件，跳转到用户中心
+                    document.getElementById('welcome-message').style.cursor = 'pointer';
+                    document.getElementById('welcome-message').onclick = function() {
+                        window.location.href = 'user-center.html';
+                    };
+                    
+                    // 更新移动端导航栏
+                    document.getElementById('mobile-auth-buttons').classList.add('hidden');
+                    document.getElementById('mobile-user-info').classList.remove('hidden');
+                    document.getElementById('mobile-welcome-message').textContent = `欢迎, ${userData.username}`;
+                    
+                    // 更新移动端导航栏头像 - 使用与用户中心相同的逻辑
+                    document.getElementById('mobile-navbar-user-avatar').src = userData.avatar || defaultAvatar;
+                    
+                    // 为移动端欢迎消息添加点击事件
+                    document.getElementById('mobile-welcome-message').style.cursor = 'pointer';
+                    document.getElementById('mobile-welcome-message').onclick = function() {
+                        window.location.href = 'user-center.html';
+                    };
+                    
+                    // 更新移动端菜单
+                    document.getElementById('mobile-auth-links').classList.add('hidden');
+                    document.getElementById('mobile-user-section').classList.remove('hidden');
+                    document.getElementById('mobile-menu-welcome-message').textContent = `欢迎, ${userData.username}`;
+                    
+                    // 更新移动端菜单头像 - 使用与用户中心相同的逻辑
+                    document.getElementById('mobile-menu-user-avatar').src = userData.avatar || defaultAvatar;
+                    
+                    // 为移动端菜单欢迎消息添加点击事件
+                    document.getElementById('mobile-menu-welcome-message').style.cursor = 'pointer';
+                    document.getElementById('mobile-menu-welcome-message').onclick = function() {
+                        window.location.href = 'user-center.html';
+                    };
+                    
+                    // 更新页脚
+                    document.getElementById('footer-links').classList.add('hidden');
+                    document.getElementById('footer-user-section').classList.remove('hidden');
+                    document.getElementById('footer-welcome-message').textContent = `欢迎, ${userData.username}`;
+                    
+                    // 更新页脚头像 - 使用与用户中心相同的逻辑
+                    document.getElementById('footer-user-avatar').src = userData.avatar || defaultAvatar;
+                    
+                    // 为页脚欢迎消息添加点击事件
+                    document.getElementById('footer-welcome-message').style.cursor = 'pointer';
+                    document.getElementById('footer-welcome-message').onclick = function() {
+                        window.location.href = 'user-center.html';
+                    };
+                } else {
+                    // 确保所有注销相关的元素都隐藏
+                    // 对于user-info，需要移除md-flex类并添加hidden类以确保隐藏
+                    document.getElementById('user-info').classList.remove('md:flex');
+                    document.getElementById('user-info').classList.add('hidden');
+                    document.getElementById('mobile-user-info').classList.add('hidden');
+                    document.getElementById('mobile-user-section').classList.add('hidden');
+                    document.getElementById('footer-user-section').classList.add('hidden');
+                    // 确保登录/注册按钮显示
+                    document.getElementById('auth-buttons').classList.remove('hidden');
+                    document.getElementById('mobile-auth-buttons').classList.remove('hidden');
+                    document.getElementById('footer-links').classList.remove('hidden');
+                    document.getElementById('mobile-auth-links').classList.remove('hidden');
+                }
+            }
+            
+            // 页面加载时检查用户状态
+            checkUserStatus();
+            
+            // 确保在初始加载时隐藏所有用户相关元素
+            if (!localStorage.getItem('user')) {
+                // 隐藏桌面端用户信息
+                document.getElementById('user-info').classList.add('hidden');
+                document.getElementById('user-info').classList.remove('md:flex');
+                
+                // 隐藏移动端用户信息
+                document.getElementById('mobile-user-info').classList.add('hidden');
+                
+                // 隐藏移动端菜单用户信息
+                document.getElementById('mobile-user-section').classList.add('hidden');
+                
+                // 隐藏页脚用户信息
+                document.getElementById('footer-user-section').classList.add('hidden');
+                
+                // 显示登录/注册按钮
+                document.getElementById('auth-buttons').classList.remove('hidden');
+                document.getElementById('mobile-auth-buttons').classList.remove('hidden');
+                document.getElementById('footer-links').classList.remove('hidden');
+                document.getElementById('mobile-auth-links').classList.remove('hidden');
+            }
+            
+            // 页面加载完成后检查一次用户状态
+            setTimeout(function() {
+                checkUserStatus();
+                // 调试：再次检查所有注销按钮的父元素状态
+                console.log('=== 页面加载完成后再次检查 ===');
+                console.log('user-info 类名:', document.getElementById('user-info').className);
+                console.log('user-info 是否隐藏:', document.getElementById('user-info').classList.contains('hidden'));
+                console.log('mobile-user-info 类名:', document.getElementById('mobile-user-info').className);
+                console.log('mobile-user-info 是否隐藏:', document.getElementById('mobile-user-info').classList.contains('hidden'));
+                console.log('mobile-user-section 类名:', document.getElementById('mobile-user-section').className);
+                console.log('mobile-user-section 是否隐藏:', document.getElementById('mobile-user-section').classList.contains('hidden'));
+                console.log('footer-user-section 类名:', document.getElementById('footer-user-section').className);
+                console.log('footer-user-section 是否隐藏:', document.getElementById('footer-user-section').classList.contains('hidden'));
+                console.log('footer-links 类名:', document.getElementById('footer-links').className);
+                console.log('footer-links 是否隐藏:', document.getElementById('footer-links').classList.contains('hidden'));
+                
+                // 检查具体的注销按钮元素
+                console.log('具体注销按钮状态:');
+                console.log('桌面端注销按钮:', document.getElementById('user-info').offsetParent !== null);
+                console.log('移动端注销按钮:', document.getElementById('mobile-user-info').offsetParent !== null);
+                console.log('移动端菜单注销按钮:', document.getElementById('mobile-user-section').offsetParent !== null);
+                console.log('页脚注销按钮:', document.getElementById('footer-user-section').offsetParent !== null);
+                
+                // 检查计算后的样式
+                console.log('计算后的样式:');
+                console.log('user-info display:', getComputedStyle(document.getElementById('user-info')).display);
+                console.log('mobile-user-info display:', getComputedStyle(document.getElementById('mobile-user-info')).display);
+                console.log('mobile-user-section display:', getComputedStyle(document.getElementById('mobile-user-section')).display);
+                console.log('footer-user-section display:', getComputedStyle(document.getElementById('footer-user-section')).display);
+            }, 1000);
         });
+    </script>
+    
+    <!-- 注销确认模态框 -->
+    <div id="logout-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">确认退出登录</h3>
+            <p class="text-gray-600 mb-4">请输入您的账号和密码以确认退出登录</p>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="logout-email">
+                    邮箱
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="logout-email" type="email" placeholder="请输入邮箱">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="logout-password">
+                    密码
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="logout-password" type="password" placeholder="请输入密码">
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="closeLogoutModal()">
+                    取消
+                </button>
+                <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="confirmLogout()">
+确认退出
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 二次确认模态框 -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">退出登录确认</h3>
+            <p class="text-gray-600 mb-4">您确定要退出登录吗？您的账户数据将保留。</p>
+            
+            <div class="flex items-center justify-between">
+                <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="closeConfirmModal()">
+                    取消
+                </button>
+                <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="performLogout()">
+确定退出
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 显示退出登录模态框
+        function showLogoutModal() {
+            document.getElementById('logout-modal').classList.remove('hidden');
+        }
+        
+        // 关闭退出登录模态框
+        function closeLogoutModal() {
+            document.getElementById('logout-modal').classList.add('hidden');
+            // 清空输入框
+            document.getElementById('logout-email').value = '';
+            document.getElementById('logout-password').value = '';
+        }
+        
+        // 确认退出登录
+        function confirmLogout() {
+            const email = document.getElementById('logout-email').value;
+            const password = document.getElementById('logout-password').value;
+            
+            if (!email || !password) {
+                alert('请输入完整的邮箱和密码');
+                return;
+            }
+            
+            // 关闭第一个模态框，显示第二个确认模态框
+            closeLogoutModal();
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+        
+        // 关闭二次确认模态框
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+        }
+        
+        // 执行退出登录操作
+        async function performLogout() {
+            // 获取存储的用户信息
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!user || !user.id) {
+                alert('用户信息不存在，请重新登录');
+                closeConfirmModal();
+                return;
+            }
+            
+            try {
+                // 仅退出登录，不清除用户数据
+                // 清除本地存储的用户信息
+                localStorage.removeItem('user');
+                
+                // 退出登录成功
+                playSuccessSound();
+                
+                // 手动更新界面，隐藏用户信息，显示登录/注册按钮
+                // 更新导航栏
+                document.getElementById('auth-buttons').classList.remove('hidden');
+                document.getElementById('user-info').classList.remove('md:flex');
+                document.getElementById('user-info').classList.add('hidden');
+                
+                // 更新移动端导航栏
+                document.getElementById('mobile-auth-buttons').classList.remove('hidden');
+                document.getElementById('mobile-user-info').classList.add('hidden');
+                
+                // 更新移动端菜单
+                document.getElementById('mobile-auth-links').classList.remove('hidden');
+                document.getElementById('mobile-user-section').classList.add('hidden');
+                
+                // 更新页脚
+                document.getElementById('footer-links').classList.remove('hidden');
+                document.getElementById('footer-user-section').classList.add('hidden');
+                
+                // 关闭模态框
+                closeConfirmModal();
+            } catch (error) {
+                // 网络错误
+                alert(`网络错误: ${error.message}`);
+            }
+        }
     </script>
 </body>
 </html>

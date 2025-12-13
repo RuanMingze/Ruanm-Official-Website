@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruanm OAuth 配置</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0078d4',
+                        secondary: '#e6e6e6',
+                        dark: '#005a9e',
+                        light: '#f2f2f2',
+                        accent: '#00a8e8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white">
+    <!-- 导航栏 -->
+    <nav class="fixed w-full top-0 z-50 transition-all duration-300 bg-white shadow-md">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="home.html" class="flex items-center">
+                        <img src="logo.ico" alt="Ruanm Logo" class="h-8 w-8 mr-2">
+                        <span class="text-primary text-2xl font-bold">Ruanm OAuth 配置</span>
+                    </a>
+                </div>
+                
+                <!-- 导航菜单 -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="home.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">首页</a>
+                    <a href="developer.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">开发者中心</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <section class="pt-24 pb-16 md:pt-32 md:pb-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-gray-800">Ruanm OAuth 配置</h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    只需设置基础参数，系统将自动处理用户登录参数
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <!-- 添加说明部分 -->
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-info-circle text-yellow-400 text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">
+                                <strong>使用说明：</strong>
+                                只需配置客户端ID和重定向URI，系统将自动处理OAuth流程并传递用户登录参数。
+                                您的应用无需手动获取授权码，系统会在回调时自动完成令牌交换并发送用户信息。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-light rounded-lg p-8 mb-8">
+                    <h2 class="text-2xl font-bold mb-6">OAuth 集成示例</h2>
+                    
+                    <div class="grid grid-cols-1 gap-8">
+                        <!-- 配置区域 -->
+                        <div class="bg-white rounded-lg p-6 shadow-md">
+                            <h3 class="text-xl font-bold mb-4 text-primary">1. 基础参数配置</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="client-id">客户端 ID</label>
+                                    <input type="text" id="client-id" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" value="ruanm_oauth_client">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="redirect-uri">重定向 URI</label>
+                                    <input type="text" id="redirect-uri" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" value="http://localhost:3000/oauth/callback/example">
+                                </div>
+                            </div>
+                            
+                            <div class="bg-blue-50 border border-blue-200 rounded-md p-4">
+                                <p class="text-sm text-blue-700">
+                                    系统将在OAuth流程中自动处理权限范围和用户授权，您只需配置以上基础参数。
+                                </p>
+                            </div>
+                            
+                            <!-- 集成示例代码 -->
+                            <div class="mt-6">
+                                <h4 class="font-bold text-primary mb-2">集成示例代码：</h4>
+                                <div class="relative">
+                                    <textarea id="integration-code" class="w-full h-64 p-4 text-sm font-mono bg-gray-800 text-green-400 rounded overflow-auto resize-none" readonly>// 在页面加载时检查OAuth回调参数
+window.addEventListener('load', function() {
+    // 获取URL查询参数
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // 提取OAuth回调参数
+    const userInfo = urlParams.get('user_info');
+    const accessToken = urlParams.get('access_token');
+    const expiresIn = urlParams.get('expires_in');
+    
+    // 检查是否存在OAuth回调参数
+    if (userInfo && accessToken) {
+        try {
+            // 解析用户信息（注意：需要先解码再解析JSON）
+            const userInfoObj = JSON.parse(decodeURIComponent(userInfo));
+            
+            // 现在您可以使用这些信息了
+            console.log('用户信息:', userInfoObj);
+            console.log('访问令牌:', accessToken);
+            console.log('有效期:', expiresIn, '秒');
+            
+            // 示例：显示用户姓名
+            console.log('欢迎,', userInfoObj.name);
+            
+            // 示例：将访问令牌存储到localStorage供后续API调用使用
+            localStorage.setItem('oauth_access_token', accessToken);
+            
+            // 示例：在页面上显示用户信息
+            document.getElementById('username').textContent = userInfoObj.name;
+            
+        } catch (error) {
+            console.error('解析OAuth回调参数时出错:', error);
+        }
+    }
+});</textarea>
+                                    <button id="copy-code-btn" class="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                                        <i class="fas fa-copy mr-1"></i>复制
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 授权区域 -->
+                        <div class="bg-white rounded-lg p-6 shadow-md">
+                            <h3 class="text-xl font-bold mb-4 text-primary">2. 启动OAuth流程</h3>
+                            
+                            <p class="text-gray-600 mb-4">
+                                点击下面的按钮启动 OAuth 流程。系统将自动处理用户授权和参数传递。
+                            </p>
+                            
+                            <button id="authorize-btn" class="w-full bg-primary hover:bg-dark text-white font-medium py-3 px-6 rounded-md transition-all-300 mb-4">
+                                <i class="fas fa-sign-in-alt mr-2"></i>启动OAuth流程
+                            </button>
+                            
+                            <div class="bg-blue-50 border border-blue-200 rounded-md p-4">
+                                <h4 class="font-bold text-blue-800 mb-2">说明:</h4>
+                                <p class="text-sm text-blue-700">
+                                    系统会自动构造授权URL并重定向用户。用户登录后，系统将自动完成令牌交换并传递用户信息到您的应用。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- 自动处理说明 -->
+                        <div class="bg-white rounded-lg p-6 shadow-md">
+                            <h3 class="text-xl font-bold mb-4 text-primary">3. 自动处理</h3>
+                            
+                            <div class="mb-4">
+                                <p class="text-gray-600 mb-4">
+                                    系统将自动处理令牌交换过程，您无需手动获取或输入授权码。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-green-50 border border-green-200 rounded-md p-4">
+                                <h4 class="font-bold text-green-800 mb-2">自动处理流程:</h4>
+                                <ul class="list-disc pl-5 space-y-2 text-sm text-green-700">
+                                    <li>用户授权后，系统自动接收授权码</li>
+                                    <li>系统自动使用授权码交换访问令牌</li>
+                                    <li>系统自动获取用户信息</li>
+                                    <li>系统将用户信息自动发送到您的应用</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- 集成说明 -->
+                        <div class="bg-white rounded-lg p-6 shadow-md">
+                            <h3 class="text-xl font-bold mb-4 text-primary">4. 应用集成</h3>
+                            
+                            <div class="mb-4">
+                                <p class="text-gray-600 mb-4">
+                                    在您的应用中接收用户信息，请确保您的重定向URI能够处理以下参数：
+                                </p>
+                            </div>
+                            
+                            <div class="bg-purple-50 border border-purple-200 rounded-md p-4">
+                                <h4 class="font-bold text-purple-800 mb-2">回调参数:</h4>
+                                <ul class="list-disc pl-5 space-y-2 text-sm text-purple-700">
+                                    <li><code>user_info</code>: 包含用户基本信息的JSON对象</li>
+                                    <li><code>access_token</code>: 访问令牌，有效期1小时</li>
+                                    <li><code>expires_in</code>: 令牌过期时间（秒）</li>
+                                </ul>
+                                <p class="mt-3 text-sm text-purple-700">
+                                    系统将在用户登录成功后自动将这些参数发送到您的重定向URI。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 集成说明 -->
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="text-xl font-bold mb-4 text-primary">集成说明</h3>
+                    
+                    <div class="prose max-w-none">
+                        <h4 class="font-bold">1. 简化流程</h4>
+                        <p>本系统采用简化的OAuth流程，您只需配置基础参数，其余步骤均由系统自动完成。</p>
+                        
+                        <h4 class="font-bold mt-4">2. 自动处理</h4>
+                        <p>系统将自动处理授权码获取、令牌交换和用户信息获取，并将结果直接发送到您的应用。</p>
+                        
+                        <h4 class="font-bold mt-4">3. 客户端凭证</h4>
+                        <p>在生产环境中，您需要向 Ruanm 开发者中心注册您的应用以获取客户端 ID 和密钥。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Ruanm. 保留所有权利。由 Ruan Mingze 开发
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 授权按钮点击事件
+        document.getElementById('authorize-btn').addEventListener('click', function() {
+            const clientId = document.getElementById('client-id').value;
+            const redirectUri = document.getElementById('redirect-uri').value;
+            
+            // 构建授权URL
+            const authorizeUrl = `http://localhost:3000/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+            
+            // 在新窗口中打开授权URL
+            window.open(authorizeUrl, '_blank');
+        });
+        
+        // 授权按钮点击事件
+        document.getElementById('authorize-btn').addEventListener('click', function() {
+            const clientId = document.getElementById('client-id').value;
+            const redirectUri = document.getElementById('redirect-uri').value;
+            
+            // 构建授权URL
+            const authorizeUrl = `http://localhost:3000/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+            
+            // 在新窗口中打开授权URL
+            window.open(authorizeUrl, '_blank');
+        });
+        
+        // 复制代码按钮事件监听器
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyBtn = document.getElementById('copy-code-btn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    const codeTextarea = document.getElementById('integration-code');
+                    codeTextarea.select();
+                    document.execCommand('copy');
+                    
+                    // 显示复制成功提示
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i>已复制';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

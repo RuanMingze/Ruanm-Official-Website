@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruanm API 文档</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="logo.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0078d4',
+                        secondary: '#e6e6e6',
+                        dark: '#005a9e',
+                        light: '#f2f2f2',
+                        accent: '#00a8e8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'system-ui', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0078d4;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #005a9e;
+        }
+        
+        /* 导航栏滚动效果 */
+        .navbar-fixed {
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* 代码块样式 */
+        pre[class*="language-"] {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        code[class*="language-"] {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+        
+        /* 复制按钮样式 */
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        pre:hover .copy-button {
+            opacity: 1;
+        }
+        
+        .copy-button:hover {
+            background-color: #005a9e;
+        }
+        
+        .copy-button.copied {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="home.html" class="flex items-center">
+                        <img src="logo.ico" alt="Ruanm Logo" class="h-8 w-8 mr-2">
+                        <span class="text-primary text-2xl font-bold">Ruanm | Developer</span>
+                    </a>
+                </div>
+                
+                <!-- 桌面导航菜单 -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="home.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">首页</a>
+                    <a href="games.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">游戏中心</a>
+                    <a href="home.html#products" class="text-gray-700 hover:text-primary transition-all-300 font-medium">产品中心</a>
+                    <a href="developer.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">开发者中心</a>
+                    <a href="home.html#contact" class="text-gray-700 hover:text-primary transition-all-300 font-medium">联系我们</a>
+                </div>
+                
+                <!-- 菜单按钮 -->
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden text-gray-700 hover:text-primary transition-all-300" id="mobile-menu-button">
+                        <i class="fa fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 移动端导航菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <a href="home.html" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">首页</a>
+                <a href="games.html" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">游戏中心</a>
+                <a href="home.html#products" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">产品中心</a>
+                <a href="developer.html" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">开发者中心</a>
+                <a href="home.html#contact" class="block py-2 text-gray-700 hover:text-primary transition-all-300 font-medium">联系我们</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section class="relative bg-gradient-blue text-white pt-24 pb-16 md:pt-32 md:pb-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <!-- 左侧内容 -->
+                <div class="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right" data-aos-duration="1000">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                        Ruanm API 文档<br>开发者参考指南
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 text-blue-100">
+                        详细的API参考文档，帮助您快速集成Ruanm服务，构建功能丰富的应用程序。
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#introduction" class="bg-white text-primary hover:bg-blue-50 transition-all-300 font-medium py-3 px-6 rounded-md text-center text-lg">
+                            开始使用
+                        </a>
+                        <a href="developer.html" class="bg-transparent border-2 border-white text-white hover:bg-white hover:bg-opacity-10 transition-all-300 font-medium py-3 px-6 rounded-md text-center text-lg">
+                            返回开发者中心
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 右侧预览图 -->
+                <div class="md:w-1/2" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="relative">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/bf9f9940eb67476fb082c0aaaf8b4f90~tplv-a9rns2rl98-image.image?rcl=20251129115138A9E8D9C49499325B433A&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766980319&x-signature=YPEHsMg%2FPdjU8RRMEW%2FED1%2BDY%2Bw%3D" 
+                             alt="API 文档预览" 
+                             class="rounded-lg shadow-xl w-full max-w-lg mx-auto animate-float">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 波浪效果 -->
+        <div class="absolute bottom-0 left-0 w-full overflow-hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="w-full h-auto">
+                <path fill="#ffffff" fill-opacity="1" d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,80C1248,75,1344,53,1392,42.7L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- API 文档内容 -->
+    <section class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row">
+                <!-- 侧边栏导航 -->
+                <div class="lg:w-1/4 mb-10 lg:mb-0 lg:pr-8">
+                    <div class="bg-light rounded-lg p-6 sticky top-24" data-aos="fade-up">
+                        <h3 class="text-xl font-bold mb-4">文档目录</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#introduction" class="text-gray-600 hover:text-primary transition-all-300 block py-2">简介</a></li>
+                            <li><a href="#authentication" class="text-gray-600 hover:text-primary transition-all-300 block py-2">认证授权</a></li>
+                            <li><a href="#users" class="text-gray-600 hover:text-primary transition-all-300 block py-2">用户管理</a></li>
+                            <li><a href="#games" class="text-gray-600 hover:text-primary transition-all-300 block py-2">游戏中心</a></li>
+                            <li><a href="#products" class="text-gray-600 hover:text-primary transition-all-300 block py-2">产品中心</a></li>
+                            <li><a href="#errors" class="text-gray-600 hover:text-primary transition-all-300 block py-2">错误处理</a></li>
+                            <li><a href="#rate-limiting" class="text-gray-600 hover:text-primary transition-all-300 block py-2">速率限制</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 主要内容 -->
+                <div class="lg:w-3/4">
+                    <!-- 简介 -->
+                    <div id="introduction" class="mb-16" data-aos="fade-up">
+                        <h2 class="text-3xl font-bold mb-6">简介</h2>
+                        <p class="text-gray-600 mb-6">
+                            欢迎使用 Ruanm API！本文档将帮助您了解如何使用我们的 API 来构建功能丰富的应用程序。
+                        </p>
+                        <div class="bg-blue-50 border-l-4 border-primary p-4 mb-6">
+                            <p class="text-gray-700">
+                                <i class="fa fa-info-circle text-primary mr-2"></i>
+                                所有 API 请求都应发送到 <code class="bg-gray-100 px-2 py-1 rounded">http://localhost:3000/api</code>
+                            </p>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">基础 URL</h3>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto"><code>http://localhost:3000/api</code></pre>
+                    </div>
+                    
+                    <!-- 认证授权 -->
+                    <div id="authentication" class="mb-16" data-aos="fade-up">
+                        <h2 class="text-3xl font-bold mb-6">认证授权</h2>
+                        <p class="text-gray-600 mb-6">
+                            大多数 API 端点都需要认证。我们使用 JWT (JSON Web Tokens) 进行认证。
+                        </p>
+                        <h3 class="text-xl font-bold mb-4">获取访问令牌</h3>
+                        <p class="text-gray-600 mb-4">
+                            要获取访问令牌，您需要先注册开发者账号并获得 API 密钥。
+                        </p>
+                        <h4 class="text-lg font-bold mb-2">请求</h4>
+                        <pre><code>POST /api/auth/token
+Content-Type: application/json
+
+{
+  "api_key": "your_api_key_here"
+}</code></pre>
+                        <h4 class="text-lg font-bold mb-2">响应</h4>
+                        <pre><code>{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expires_in": 3600
+}</code></pre>
+                        <h3 class="text-xl font-bold mb-4">使用访问令牌</h3>
+                        <p class="text-gray-600 mb-4">
+                            获取令牌后，在后续请求的 Authorization 头中包含它：
+                        </p>
+                        <pre><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code></pre>
+                    </div>
+                    
+                    <!-- 用户管理 -->
+                    <div id="users" class="mb-16" data-aos="fade-up">
+                        <h2 class="text-3xl font-bold mb-6">用户管理</h2>
+                        
+                        <h3 class="text-xl font-bold mb-4">获取用户信息</h3>
+                        <p class="text-gray-600 mb-4">
+                            获取指定用户的公开信息。
+                        </p>
+                        <h4 class="text-lg font-bold mb-2">请求</h4>
+                        <pre><code>GET /api/users/{userId}
+Authorization: Bearer YOUR_ACCESS_TOKEN</code></pre>
+                        <h4 class="text-lg font-bold mb-2">响应</h4>
+                        <pre><code>{
+  "success": true,
+  "data": {
+    "id": "123456",
+    "username": "example_user",
+    "email": "user@example.com",
+    "avatar": "https://example.com/avatar.jpg",
+    "created_at": "2025-01-01T00:00:00Z"
+  }
+}</code></pre>
+                        
+                        <h3 class="text-xl font-bold mb-4">更新用户信息</h3>
+                        <p class="text-gray-600 mb-4">
+                            更新当前认证用户的个人信息。
+                        </p>
+                        <h4 class="text-lg font-bold mb-2">请求</h4>
+                        <pre><code>PUT /api/users/{userId}
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "username": "new_username",
+  "email": "new_email@example.com"
+}</code></pre>
+                        <h4 class="text-lg font-bold mb-2">响应</h4>
+                        <pre><code>{
+  "success": true,
+  "data": {
+    "id": "123456",
+    "username": "new_username",
+    "email": "new_email@example.com",
+    "avatar": "https://example.com/avatar.jpg",
+    "created_at": "2025-01-01T00:00:00Z",
+    "updated_at": "2025-01-02T00:00:00Z"
+  }
+}</code></pre>
+                    </div>
+                    
+                    <!-- 游戏中心 -->
+                    <div id="games" class="mb-16" data-aos="fade-up">
+                        <h2 class="text-3xl font-bold mb-6">游戏中心</h2>
+                        
+                        <h3 class="text-xl font-bold mb-4">获取游戏列表</h3>
+                        <p class="text-gray-600 mb-4">
+                            获取所有可用游戏的列表。
+                        </p>
+                        <h4 class="text-lg font-bold mb-2">请求</h4>
+                        <pre><code>GET /api/games
+Authorization: Bearer YOUR_ACCESS_TOKEN</code></pre>
+                        <h4 class="text-lg font-bold mb-2">响应</h4>
+                        <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "id": "game1",
+      "name": "超级马里奥",
+      "description": "经典平台跳跃游戏",
+      "thumbnail": "https://example.com/mario.jpg",
+      "category": "platformer"
+    },
+    {
+      "id": "game2",
+      "name": "俄罗斯方块",
+      "description": "经典的益智游戏",
+      "thumbnail": "https://example.com/tetris.jpg",
+      "category": "puzzle"
+    }
+  ]
+}</code></pre>
+                    </div>
+                    
+                    <!-- 产品中心 -->
+                    <div id="products" class="mb-16" data-aos="fade-up">
+                        <h2 class="text-3xl font-bold mb-6">产品中心</h2>
+                        
+                        <h3 class="text-xl font-bold mb-4">获取产品列表</h3>
+                        <p class="text-gray-600 mb-4">
+                            获取所有可用产品的列表。
+                        </p>
+                        <h4 class="text-lg font-bold mb-2">请求</h4>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto mb-4"><code>GET /api/products
+Authorization: Bearer YOUR_ACCESS_TOKEN</code></pre>
+                        <h4 class="text-lg font-bold mb-2">响应</h4>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto mb-4"><code>{
+  "success": true,
+  "data": [
+    {
+      "id": "product1",
+      "name": "Ruanm 屏保程序",
+      "description": "个性化您的Windows体验",
+      "thumbnail": "https://example.com/screensaver.jpg",
+      "price": 0
+    },
+    {
+      "id": "product2",
+      "name": "Ruanm Studio",
+      "description": "强大的软件开发工具包",
+      "thumbnail": "https://example.com/studio.jpg",
+      "price": 0
+    }
+  ]
+}</code></pre>
+                    </div>
+                    
+                    <!-- 错误处理 -->
+                    <div id="errors" class="mb-16" data-aos="fade-up">
+                        <h2 class="text-3xl font-bold mb-6">错误处理</h2>
+                        <p class="text-gray-600 mb-6">
+                            当 API 请求出现问题时，我们会返回标准的错误响应格式。
+                        </p>
+                        <h3 class="text-xl font-bold mb-4">错误响应格式</h3>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto mb-4"><code>{
+  "success": false,
+  "error": "错误信息描述",
+  "code": "ERROR_CODE"
+}</code></pre>
+                        <h3 class="text-xl font-bold mb-4">常见错误代码</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white border border-gray-200">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="py-2 px-4 border-b text-left">错误代码</th>
+                                        <th class="py-2 px-4 border-b text-left">描述</th>
+                                        <th class="py-2 px-4 border-b text-left">HTTP 状态码</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b">UNAUTHORIZED</td>
+                                        <td class="py-2 px-4 border-b">未提供有效的认证信息</td>
+                                        <td class="py-2 px-4 border-b">401</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b">FORBIDDEN</td>
+                                        <td class="py-2 px-4 border-b">权限不足</td>
+                                        <td class="py-2 px-4 border-b">403</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b">NOT_FOUND</td>
+                                        <td class="py-2 px-4 border-b">请求的资源不存在</td>
+                                        <td class="py-2 px-4 border-b">404</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b">VALIDATION_ERROR</td>
+                                        <td class="py-2 px-4 border-b">请求参数验证失败</td>
+                                        <td class="py-2 px-4 border-b">400</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-2 px-4 border-b">INTERNAL_ERROR</td>
+                                        <td class="py-2 px-4 border-b">服务器内部错误</td>
+                                        <td class="py-2 px-4 border-b">500</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 速率限制 -->
+                    <div id="rate-limiting" class="mb-16" data-aos="fade-up">
+                        <h2 class="text-3xl font-bold mb-6">速率限制</h2>
+                        <p class="text-gray-600 mb-6">
+                            为了保证服务质量，API 对请求频率有所限制。
+                        </p>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
+                            <p class="text-gray-700">
+                                <i class="fa fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                                默认情况下，每个 API 密钥每小时最多可以发送 1000 个请求。
+                            </p>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">查看速率限制信息</h3>
+                        <p class="text-gray-600 mb-4">
+                            每个响应都包含速率限制相关信息的头部：
+                        </p>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto"><code>X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 999
+X-RateLimit-Reset: 1609459200</code></pre>
+                        <p class="text-gray-600">
+                            如果超过速率限制，API 将返回 429 状态码和相应的错误信息。
+                        </p>
+                    </div>
+                    
+                    <!-- 代码示例 -->
+                    <div id="examples" class="mb-16" data-aos="fade-up">
+                        <h2 class="text-3xl font-bold mb-6">代码示例</h2>
+                        <p class="text-gray-600 mb-6">
+                            以下是一些使用 Ruanm API 的实用代码示例。
+                        </p>
+                        
+                        <h3 class="text-xl font-bold mb-4">JavaScript 示例</h3>
+                        <p class="text-gray-600 mb-4">
+                            使用 JavaScript 获取用户信息：
+                        </p>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto mb-6"><code>// 获取访问令牌
+async function getAccessToken(apiKey) {
+  const response = await fetch('http://localhost:3000/api/auth/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ api_key: apiKey })
+  });
+  
+  const data = await response.json();
+  return data.token;
+}
+
+// 获取用户信息
+async function getUserInfo(userId, token) {
+  const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  
+  const data = await response.json();
+  return data;
+}
+
+// 使用示例
+(async () => {
+  try {
+    const token = await getAccessToken('your_api_key_here');
+    const userInfo = await getUserInfo('123456', token);
+    console.log(userInfo);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+})();</code></pre>
+                        
+                        <h3 class="text-xl font-bold mb-4">Python 示例</h3>
+                        <p class="text-gray-600 mb-4">
+                            使用 Python 获取游戏列表：
+                        </p>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto"><code>import requests
+
+def get_access_token(api_key):
+    url = "http://localhost:3000/api/auth/token"
+    payload = {"api_key": api_key}
+    response = requests.post(url, json=payload)
+    return response.json()["token"]
+
+def get_games(token):
+    url = "http://localhost:3000/api/games"
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+# 使用示例
+try:
+    token = get_access_token("your_api_key_here")
+    games = get_games(token)
+    print(games)
+except Exception as e:
+    print(f"Error: {e}")</code></pre>
+                    </div>
+                    
+                    <!-- 最佳实践 -->
+                    <div id="best-practices" data-aos="fade-up">
+                        <h2 class="text-3xl font-bold mb-6">最佳实践</h2>
+                        <p class="text-gray-600 mb-6">
+                            遵循以下最佳实践可以帮助您更好地使用 Ruanm API。
+                        </p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-light rounded-lg p-6">
+                                <h3 class="text-xl font-bold mb-3">安全处理令牌</h3>
+                                <p class="text-gray-600">
+                                    始终将访问令牌存储在安全的地方，不要将其硬编码在客户端代码中。对于Web应用，考虑使用HTTP-only cookies存储令牌。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-light rounded-lg p-6">
+                                <h3 class="text-xl font-bold mb-3">错误处理</h3>
+                                <p class="text-gray-600">
+                                    始终检查API响应的状态码和错误信息，适当处理各种错误情况，提供友好的用户体验。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-light rounded-lg p-6">
+                                <h3 class="text-xl font-bold mb-3">合理使用缓存</h3>
+                                <p class="text-gray-600">
+                                    对于不经常变化的数据，使用适当的缓存策略可以减少API调用次数，提高应用性能。
+                                </p>
+                            </div>
+                            
+                            <div class="bg-light rounded-lg p-6">
+                                <h3 class="text-xl font-bold mb-3">遵守速率限制</h3>
+                                <p class="text-gray-600">
+                                    监控您的API使用情况，确保不超过速率限制。在接近限制时实施适当的节流机制。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 border-l-4 border-primary p-4">
+                            <p class="text-gray-700">
+                                <i class="fa fa-lightbulb-o text-primary mr-2"></i>
+                                <strong>提示：</strong>定期查看API文档更新，了解新增功能和改进。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 品牌信息 -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="logo.ico" alt="Ruanm Logo" class="h-10 w-10 mr-3">
+                        <h4 class="text-xl font-bold">Ruanm | Developer</h4>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        为开发者提供强大的工具和资源，共同构建创新的应用程序。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/RuanMingze/" class="text-gray-400 hover:text-white transition-all-300">
+                            <i class="fa fa-github fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">快速链接</h4>
+                    <ul class="space-y-2">
+                        <li><a href="home.html" class="text-gray-400 hover:text-white transition-all-300">首页</a></li>
+                        <li><a href="games.html" class="text-gray-400 hover:text-white transition-all-300">游戏中心</a></li>
+                        <li><a href="home.html#products" class="text-gray-400 hover:text-white transition-all-300">产品中心</a></li>
+                        <li><a href="developer.html" class="text-gray-400 hover:text-white transition-all-300">开发者中心</a></li>
+                        <li><a href="home.html#contact" class="text-gray-400 hover:text-white transition-all-300">联系我们</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 资源 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">开发资源</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-all-300">Ruanm OAuth</a></li>
+                        <li><a href="Studio.html" class="text-gray-400 hover:text-white transition-all-300">Ruanm Studio</a></li>
+                        <li><a href="api-documentation.html" class="text-gray-400 hover:text-white transition-all-300">API文档</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-all-300">代码示例</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系方式 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">联系方式</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope text-primary mr-3"></i>
+                            <span>xmt20160124@outlook.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-github text-primary mr-3"></i>
+                            <span>Github.com/RuanMingze</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Ruanm. 保留所有权利。由 Ruan Mingze 开发
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-primary hover:bg-dark text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all-300 opacity-0 invisible">
+        <i class="fa fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 初始化AOS动画库
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // 导航栏滚动效果
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('navbar-fixed');
+                } else {
+                    navbar.classList.remove('navbar-fixed');
+                }
+            });
+            
+            // 移动端菜单切换
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+                const icon = mobileMenuButton.querySelector('i');
+                if (mobileMenu.classList.contains('hidden')) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                } else {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            });
+            
+            // 返回顶部按钮
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                        
+                        // 如果是移动端，点击后关闭菜单
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                            const icon = mobileMenuButton.querySelector('i');
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            });
+            
+            // 添加复制按钮功能
+            function addCopyButtons() {
+                const codeBlocks = document.querySelectorAll('pre code');
+                codeBlocks.forEach(function(codeBlock) {
+                    // 创建复制按钮
+                    const copyButton = document.createElement('button');
+                    copyButton.className = 'copy-button';
+                    copyButton.textContent = '复制';
+                    copyButton.setAttribute('aria-label', '复制代码');
+                    
+                    // 获取代码块的父元素（pre标签）
+                    const pre = codeBlock.parentElement;
+                    
+                    // 将复制按钮添加到pre标签中
+                    pre.style.position = 'relative';
+                    pre.appendChild(copyButton);
+                    
+                    // 添加点击事件
+                    copyButton.addEventListener('click', function() {
+                        // 获取代码文本
+                        const codeText = codeBlock.textContent;
+                        
+                        // 使用Clipboard API复制文本
+                        navigator.clipboard.writeText(codeText).then(function() {
+                            // 复制成功
+                            copyButton.textContent = '已复制!';
+                            copyButton.classList.add('copied');
+                            
+                            // 2秒后恢复原状
+                            setTimeout(function() {
+                                copyButton.textContent = '复制';
+                                copyButton.classList.remove('copied');
+                            }, 2000);
+                        }).catch(function(err) {
+                            // 复制失败
+                            console.error('复制失败: ', err);
+                            copyButton.textContent = '复制失败';
+                            
+                            // 2秒后恢复原状
+                            setTimeout(function() {
+                                copyButton.textContent = '复制';
+                            }, 2000);
+                        });
+                    });
+                });
+            }
+            
+            // 页面加载完成后添加复制按钮
+            addCopyButtons();
+        });
+    </script>
+</body>
+</html>

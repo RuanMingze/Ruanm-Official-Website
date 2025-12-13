@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruanm 用户登录</title>
+    <!-- 引入API服务 -->
+    <script src="api.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .hidden {
+            display: none;
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .links a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ruanm 用户登录</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="identifier">用户名或邮箱</label>
+                <input type="text" id="identifier" name="identifier" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit">登录</button>
+        </form>
+        
+        <div id="message" class="message hidden"></div>
+        
+        <div class="links">
+            <p>还没有账户？<a href="register.html">立即注册</a></p>
+            <p><a href="home.html">返回首页</a></p>
+        </div>
+    </div>
+
+    <script>
+        // 播放成功音效函数
+        function playSuccessSound() {
+            const audio = new Audio('succss.mp3');
+            audio.play().catch(e => console.log('音频播放失败:', e));
+        }
+        
+        // OAuth参数
+        let oauthParams = {};
+        
+        // 解析URL参数
+        function parseUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            oauthParams.client_id = urlParams.get('client_id');
+            oauthParams.redirect_uri = urlParams.get('redirect_uri');
+            oauthParams.scope = urlParams.get('scope');
+            oauthParams.state = urlParams.get('state');
+        }
+        
+        // 生成授权码
+        function generateAuthCode() {
+            return 'ac_' + Math.random().toString(36).substr(2, 32);
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const identifier = document.getElementById('identifier').value;
+            const password = document.getElementById('password').value;
+            
+            // 显示加载状态
+            showMessage('正在登录...', 'info');
+            
+            try {
+                // 使用API服务进行登录
+                const result = await ApiService.login(identifier, password);
+                
+                if (result.success) {
+                    // 登录成功
+                    playSuccessSound();                    
+                    showMessage(`登录成功！欢迎 ${result.data.user.username}`, 'success');
+                    
+                    // 将用户信息存储到localStorage
+                    // 注意：我们需要保存用户的ID以便后续请求使用
+                    const userData = {
+                        id: result.data.user.id,
+                        username: result.data.user.username,
+                        email: result.data.user.email,
+                        role: result.data.user.role,
+                        created_at: result.data.user.created_at,
+                        avatar: result.data.user.avatar, // 添加头像信息
+                        api_key: result.data.api_key // 如果是开发者，保存API密钥
+                    };
+                    
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    
+                    // 检查是否有OAuth参数，如果有则重定向到回调URL
+                    if (oauthParams.client_id && oauthParams.redirect_uri) {
+                        // 生成授权码
+                        const authCode = generateAuthCode();
+                        
+                        // 构建回调URL
+                        let callbackUrl = oauthParams.redirect_uri;
+                        callbackUrl += callbackUrl.includes('?') ? '&' : '?';
+                        callbackUrl += `code=${authCode}`;
+                        if (oauthParams.state) {
+                            callbackUrl += `&state=${oauthParams.state}`;
+                        }
+                        
+                        // 重定向到回调URL
+                        setTimeout(() => {
+                            window.location.href = callbackUrl;
+                        }, 800);
+                    } else {
+                        // 重定向到首页
+                        setTimeout(() => {
+                            window.location.href = 'home.html';
+                        }, 800);
+                    }
+                } else {
+                    // 登录失败
+                    showMessage(`登录失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                // 网络错误
+                showMessage(`网络错误: ${error.message}`, 'error');
+            }
+        });
+        
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.classList.remove('hidden');
+            
+            // 成功消息3秒后自动隐藏
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.classList.add('hidden');
+                }, 3000);
+            }
+        }
+        
+        // 页面加载时解析URL参数
+        parseUrlParams();
+    </script>
+</body>
+</html>

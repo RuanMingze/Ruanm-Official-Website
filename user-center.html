@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户中心 - Ruanm</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="logo.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <!-- AOS Animation Library -->
+    <link href="aos.css" rel="stylesheet">
+    <script src="aos.js"></script>
+    <!-- 引入API服务 -->
+    <script src="api.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0078d4',
+                        secondary: '#e6e6e6',
+                        dark: '#005a9e',
+                        light: '#f2f2f2',
+                        accent: '#00a8e8'
+                    },
+                    fontFamily: {
+                        sans: ['Segoe UI', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0078d4;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #005a9e;
+        }
+        
+        /* 导航栏滚动效果 */
+        .navbar-fixed {
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="home.html" class="flex items-center">
+                        <img src="logo.ico" alt="Ruanm Logo" class="h-8 w-8 mr-2">
+                        <span class="text-primary text-2xl font-bold">Ruanm</span>
+                    </a>
+                </div>
+                
+                <!-- 桌面导航菜单 -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="home.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">首页</a>
+                    <a href="games.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">游戏中心</a>
+                    <a href="home.html#products" class="text-gray-700 hover:text-primary transition-all-300 font-medium">产品中心</a>
+                    <a href="developer.html" class="text-gray-700 hover:text-primary transition-all-300 font-medium">开发者中心</a>
+                    <a href="home.html#philosophy" class="text-gray-700 hover:text-primary transition-all-300 font-medium">设计理念</a>
+                    <a href="home.html#contact" class="text-gray-700 hover:text-primary transition-all-300 font-medium">联系我们</a>
+                </div>
+                
+                <!-- 用户信息显示 -->
+                <div class="hidden md:flex items-center space-x-4" id="user-info">
+                    <span class="text-gray-700 font-medium" id="welcome-message"></span>
+                    <a href="#" onclick="showLogoutModal()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-all-300 font-medium">注销</a>
+                </div>
+                
+                <!-- 移动端用户信息显示 -->
+                <div class="flex items-center space-x-4 hidden" id="mobile-user-info">
+                    <div class="md:hidden flex items-center space-x-2">
+                        <span class="text-gray-700 font-medium text-sm" id="mobile-welcome-message"></span>
+                        <a href="#" onclick="showLogoutModal()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-all-300 text-sm">注销</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 用户中心内容 -->
+    <section class="pt-24 pb-16 min-h-screen">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4">用户中心</h1>
+                <p class="text-xl text-gray-600">查看和管理您的账户信息</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <!-- 用户基本信息 -->
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex items-center">
+                            <div class="relative">
+                                <img src="" alt="用户头像" class="w-20 h-20 rounded-full mr-6" id="user-avatar">
+                                <button class="absolute bottom-0 right-6 bg-primary text-white rounded-full p-1 w-6 h-6 flex items-center justify-center" onclick="changeAvatar()">
+                                    <i class="fa fa-camera"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold" id="user-name"></h2>
+                                <p class="text-gray-600 mt-1" id="user-email"></p>
+                                <p class="text-gray-600 mt-1" id="user-role"></p>
+                                <p class="text-gray-600 mt-1" id="user-created-at"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 用户详细信息 -->
+                    <div class="p-6" id="user-details-section">
+                        <h3 class="text-xl font-bold mb-4">账户详情</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-1">用户名</label>
+                                <p class="bg-gray-100 p-3 rounded" id="detail-username"></p>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-1">邮箱</label>
+                                <p class="bg-gray-100 p-3 rounded" id="detail-email"></p>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-1">注册时间</label>
+                                <p class="bg-gray-100 p-3 rounded" id="detail-created-at"></p>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-1">用户角色</label>
+                                <p class="bg-gray-100 p-3 rounded" id="detail-role"></p>
+                            </div>
+                        </div>
+                        
+                        <!-- 开发者API密钥（仅对开发者显示） -->
+                        <div class="mt-6 hidden" id="api-key-section">
+                            <h3 class="text-xl font-bold mb-4">开发者API密钥</h3>
+                            <div class="flex">
+                                <input type="password" readonly class="flex-grow bg-gray-100 p-3 rounded-l" id="api-key-value">
+                                <button class="bg-primary hover:bg-dark text-white px-4 py-3 rounded-r transition-all-300 font-medium" onclick="copyApiKey()">
+                                    <i class="fa fa-copy mr-2"></i>复制
+                                </button>
+                            </div>
+                            <p class="text-gray-600 mt-2 text-sm">请妥善保管您的API密钥，不要泄露给他人。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 编辑资料表单（默认隐藏） -->
+                    <div class="p-6 hidden" id="edit-profile-form">
+                        <h3 class="text-xl font-bold mb-4">编辑资料</h3>
+                        <form id="profile-form">
+                            <div class="flex items-center mb-4">
+                                <img src="" alt="预览头像" class="w-16 h-16 rounded-full mr-4" id="preview-avatar">
+                                <div>
+                                    <button type="button" class="bg-primary hover:bg-dark text-white px-4 py-2 rounded-md transition-all-300 font-medium" onclick="changeAvatarPreview()">
+                                        更换头像
+                                    </button>
+                                    <p class="text-gray-600 text-sm mt-1">支持 JPG、PNG 格式，大小不超过 2MB</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="edit-username">
+                                    用户名
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="edit-username" type="text" placeholder="请输入用户名">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="edit-email">
+                                    邮箱
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="edit-email" type="email" placeholder="请输入邮箱">
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="cancelEditProfile()">
+                                    取消
+                                </button>
+                                <button class="bg-primary hover:bg-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                                    保存
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- 修改密码表单（默认隐藏） -->
+                    <div class="p-6 hidden" id="change-password-form">
+                        <h3 class="text-xl font-bold mb-4">修改密码</h3>
+                        <form id="password-form">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="old-password">
+                                    旧密码
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="old-password" type="password" placeholder="请输入旧密码">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="new-password">
+                                    新密码
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="new-password" type="password" placeholder="请输入新密码">
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm-password">
+                                    确认新密码
+                                </label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="confirm-password" type="password" placeholder="请再次输入新密码">
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="cancelChangePassword()">
+                                    取消
+                                </button>
+                                <button class="bg-primary hover:bg-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                                    修改密码
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- 操作按钮 -->
+                    <div class="p-6 bg-gray-50 border-t border-gray-200">
+                        <div class="flex flex-wrap gap-4">
+                            <button class="bg-primary hover:bg-dark text-white px-6 py-2 rounded-md transition-all-300 font-medium" onclick="editProfile()">
+                                <i class="fa fa-edit mr-2"></i>编辑资料
+                            </button>
+                            <button class="bg-gray-500 hover:bg-gray-700 text-white px-6 py-2 rounded-md transition-all-300 font-medium" onclick="changePassword()">
+                                <i class="fa fa-lock mr-2"></i>修改密码
+                            </button>
+                            <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md transition-all-300 font-medium" onclick="showDeleteAccountModal()">
+                                <i class="fa fa-trash mr-2"></i>注销账户
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 品牌信息 -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="logo.ico" alt="Ruanm Logo" class="h-10 w-10 mr-3">
+                        <h4 class="text-xl font-bold">Ruanm</h4>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        致力于创造简单、美观、实用的软件产品，我们正在努力将Ruanm发展成为一家专业的软件公司。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/RuanMingze/" class="text-gray-400 hover:text-white transition-all-300">
+                            <img src="https://github.com/favicon.ico" alt="GitHub" class="w-8 h-8">
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">快速链接</h4>
+                    <ul class="space-y-2">
+                        <li><a href="home.html" class="text-gray-400 hover:text-white transition-all-300">首页</a></li>
+                        <li><a href="home.html#products" class="text-gray-400 hover:text-white transition-all-300">产品中心</a></li>
+                        <li><a href="home.html#philosophy" class="text-gray-400 hover:text-white transition-all-300">设计理念</a></li>
+                        <li><a href="home.html#contact" class="text-gray-400 hover:text-white transition-all-300">联系我们</a></li>
+                        <li><a href="login.html" class="text-gray-400 hover:text-white transition-all-300" id="footer-login-link">登录</a></li>
+                        <li><a href="register.html" class="text-gray-400 hover:text-white transition-all-300" id="footer-register-link">注册</a></li>
+                    </ul>
+                    <!-- 已登录时显示 -->
+                    <div id="footer-user-section" class="hidden">
+                        <ul class="space-y-2">
+                            <li><span class="text-gray-400" id="footer-welcome-message"></span></li>
+                            <li><a href="#" onclick="showLogoutModal()" class="text-gray-400 hover:text-white transition-all-300">注销</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 产品 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">产品</h4>
+                    <ul class="space-y-2">
+                        <li><a href="program.html" class="text-gray-400 hover:text-white transition-all-300">Ruanm 屏保程序</a></li>
+                        <li><a href="toolbox.html" class="text-gray-400 hover:text-white transition-all-300">阮铭泽工具箱</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系方式 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">联系方式</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope text-primary mr-3"></i>
+                            <span>xmt20160124@outlook.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <img src="https://github.com/favicon.ico" alt="GitHub" class="w-5 h-5 mr-3">
+                            <span>Github.com/RuanMingze</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 Ruanm. 保留所有权利。由 Ruan Mingze 开发
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 注销确认模态框 -->
+    <div id="logout-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">确认退出登录</h3>
+            <p class="text-gray-600 mb-4">请输入您的账号和密码以确认退出登录</p>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="logout-email">
+                    邮箱
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="logout-email" type="email" placeholder="请输入邮箱">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="logout-password">
+                    密码
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="logout-password" type="password" placeholder="请输入密码">
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="closeLogoutModal()">
+                    取消
+                </button>
+                <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="confirmLogout()">
+                    确认退出
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 二次确认模态框 -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">退出登录确认</h3>
+            <p class="text-gray-600 mb-4">您确定要退出登录吗？您的账户数据将保留。</p>
+            
+            <div class="flex items-center justify-between">
+                <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="closeConfirmModal()">
+                    取消
+                </button>
+                <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="performLogout()">
+                    确定退出
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 注销账户确认模态框 -->
+    <div id="delete-account-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">注销账户确认</h3>
+            <p class="text-gray-600 mb-4">您确定要注销账户吗？此操作不可撤销，所有数据将被永久删除。</p>
+            
+            <div class="flex items-center justify-between">
+                <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="closeDeleteAccountModal()">
+                    取消
+                </button>
+                <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="deleteAccount()">
+                    确定注销
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 播放成功音效函数
+        function playSuccessSound() {
+            const audio = new Audio('succss.mp3');
+            audio.play().catch(e => console.log('音频播放失败:', e));
+        }
+        
+        // 初始化AOS动画库
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // 导航栏滚动效果
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('navbar-fixed');
+                } else {
+                    navbar.classList.remove('navbar-fixed');
+                }
+            });
+            
+            // 页面加载时检查用户状态并显示用户信息
+            loadUserInfo();
+            
+            // 绑定表单提交事件
+            document.getElementById('profile-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // 获取表单数据
+                const username = document.getElementById('edit-username').value.trim();
+                const email = document.getElementById('edit-email').value.trim();
+                const previewAvatar = document.getElementById('preview-avatar');
+                
+                // 获取原始用户信息
+                const originalUser = JSON.parse(localStorage.getItem('user'));
+                
+                // 准备更新数据
+                const updateData = {};
+                
+                // 检查用户名是否有变化
+                if (username !== originalUser.username) {
+                    updateData.username = username;
+                }
+                
+                // 检查邮箱是否有变化
+                if (email !== originalUser.email) {
+                    updateData.email = email;
+                }
+                
+                // 检查头像是否有变化并且有文件
+                if (previewAvatar.file) {
+                    // 创建FormData对象用于上传
+                    const formData = new FormData();
+                    formData.append('avatar', previewAvatar.file);
+                    
+                    try {
+                        // 上传头像到服务器
+                        const response = await fetch('http://localhost:3000/api/upload/avatar', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (response.ok && result.url) {
+                            // 更新头像URL
+                            let avatarUrl = result.url;
+                            console.log('原始URL:', avatarUrl);
+                            // 确保URL格式正确，移除可能存在的file:///前缀
+                            if (avatarUrl.startsWith('file:///')) {
+                                avatarUrl = avatarUrl.substring(8); // 移除 'file:///' 前缀
+                                console.log('移除file:///前缀后:', avatarUrl);
+                            }
+                            // 如果URL不是完整的URL，则构造完整的URL
+                            if (!avatarUrl.startsWith('http://') && !avatarUrl.startsWith('https://')) {
+                                console.log('URL不是完整的URL，需要构造');
+                                // 确保URL以 '/' 开头
+                                if (!avatarUrl.startsWith('/')) {
+                                    avatarUrl = '/' + avatarUrl;
+                                    console.log('添加/前缀后:', avatarUrl);
+                                }
+                                // 构造完整的URL
+                                avatarUrl = window.location.origin + avatarUrl;
+                                console.log('构造完整URL后:', avatarUrl);
+                            } else {
+                                console.log('URL已经是完整的URL:', avatarUrl);
+                            }
+                            updateData.avatar = avatarUrl;
+                        } else {
+                            alert('头像上传失败: ' + (result.message || '未知错误'));
+                            return;
+                        }
+                    } catch (error) {
+                        alert('头像上传失败: ' + error.message);
+                        return;
+                    }
+                }
+                
+                // 检查是否有数据需要更新
+                if (Object.keys(updateData).length === 0) {
+                    alert('没有数据需要更新');
+                    return;
+                }
+                
+                // 发送更新请求
+                const result = await ApiService.updateUser(originalUser.id, updateData);
+                
+                if (result.success) {
+                    // 更新本地存储的用户信息
+                    const updatedUser = {...originalUser, ...result.data};
+                    localStorage.setItem('user', JSON.stringify(updatedUser));
+                    
+                    // 更新页面显示的用户信息
+                    displayUserInfo(updatedUser);
+                    
+                    // 隐藏编辑表单，显示用户详情
+                    document.getElementById('edit-profile-form').classList.add('hidden');
+                    document.getElementById('user-details-section').classList.remove('hidden');
+                    
+                    alert('用户信息更新成功');
+                } else {
+                    alert('更新失败: ' + result.error);
+                }
+            });
+            document.getElementById('password-form').addEventListener('submit', handlePasswordSubmit);
+        });
+        
+        // 处理资料更新表单提交
+        async function handleProfileSubmit(event) {
+            event.preventDefault();
+            
+            // 获取表单数据
+            const username = document.getElementById('edit-username').value.trim();
+            const email = document.getElementById('edit-email').value.trim();
+            
+            // 简单验证
+            if (!username || !email) {
+                alert('请填写完整的用户名和邮箱');
+                return;
+            }
+            
+            // 邮箱格式验证
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('请输入有效的邮箱地址');
+                return;
+            }
+            
+            // 获取当前用户信息
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.id) {
+                alert('用户信息不存在，请重新登录');
+                return;
+            }
+            
+            // 准备更新数据
+            const userData = {};
+            if (username !== user.username) userData.username = username;
+            if (email !== user.email) userData.email = email;
+            
+            // 如果没有需要更新的数据
+            if (Object.keys(userData).length === 0) {
+                alert('没有需要更新的信息');
+                cancelEditProfile();
+                return;
+            }
+            
+            // 调用API更新用户信息
+            const result = await ApiService.updateUser(user.id, userData);
+            
+            if (result.success) {
+                // 更新成功，更新本地存储的用户信息
+                const updatedUser = { ...user, ...result.data };
+                localStorage.setItem('user', JSON.stringify(updatedUser));
+                
+                // 更新页面显示
+                loadUserInfo();
+                
+                // 隐藏表单，显示用户详情
+                cancelEditProfile();
+                
+                alert('用户信息更新成功');
+            } else {
+                // 显示更详细的错误信息
+                alert('更新失败: ' + (result.error || '未知错误'));
+                console.error('更新用户信息失败:', result); // 在控制台输出详细错误信息
+            }
+        }
+        
+        // 处理密码修改表单提交
+        async function handlePasswordSubmit(event) {
+            event.preventDefault();
+            
+            // 获取表单数据
+            const oldPassword = document.getElementById('old-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // 验证
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                alert('请填写完整的所有密码字段');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('新密码至少需要6个字符');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('两次输入的新密码不一致');
+                return;
+            }
+            
+            // 获取当前用户信息
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.id) {
+                alert('用户信息不存在，请重新登录');
+                return;
+            }
+            
+            // 调用API修改密码
+            const result = await ApiService.changePassword(user.id, oldPassword, newPassword);
+            
+            if (result.success) {
+                // 修改成功
+                // 清空表单
+                document.getElementById('password-form').reset();
+                
+                // 隐藏表单，显示用户详情
+                cancelChangePassword();
+                
+                alert('密码修改成功');
+            } else {
+                alert('密码修改失败: ' + result.error);
+            }
+        }
+        
+        // 加载用户信息
+        async function loadUserInfo() {
+            // 从localStorage获取用户信息
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!user) {
+                // 用户未登录，重定向到登录页面
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // 从后端获取最新的用户信息
+            const result = await ApiService.getUserById(user.id);
+            
+            if (result.success) {
+                const userData = result.data;
+                
+                // 更新页面中的用户信息
+                document.getElementById('user-name').textContent = userData.name || userData.username;
+                document.getElementById('user-email').textContent = userData.email;
+                document.getElementById('user-role').textContent = getUserRoleText(userData.role);
+                document.getElementById('user-created-at').textContent = `注册时间: ${formatDate(userData.created_at)}`;
+                document.getElementById('user-avatar').src = userData.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name || userData.username)}&background=4361ee&color=fff&size=80`;
+                
+                // 更新详细信息
+                document.getElementById('detail-username').textContent = userData.username;
+                document.getElementById('detail-email').textContent = userData.email;
+                document.getElementById('detail-created-at').textContent = formatDate(userData.created_at);
+                document.getElementById('detail-role').textContent = getUserRoleText(userData.role);
+                
+                // 如果是开发者，显示API密钥
+                if (userData.role === 'developer' && userData.api_key) {
+                    document.getElementById('api-key-section').classList.remove('hidden');
+                    document.getElementById('api-key-value').value = userData.api_key;
+                }
+                
+                // 更新导航栏和页脚的用户信息
+                updateAuthUI(userData);
+            } else {
+                // 获取用户信息失败，可能是会话过期，重定向到登录页面
+                alert('获取用户信息失败: ' + result.error);
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // 显示用户信息
+        function displayUserInfo(user) {
+            // 设置默认头像
+            const defaultAvatar = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDFkMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItdXNlciI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNC00VjVhMiAyIDAgMCAxIDItMmgxNGEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJ6Ij48L3BhdGg+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxMiAxNSAxNSAxOCI+PC9wb2x5bGluZT48cGF0aCBkPSJNMTIgMTFTMTQgMTQgMTQgMTQiPjwvcGF0aD48L3N2Zz4=';
+            
+            // 更新头像
+            document.getElementById('user-avatar').src = user.avatar || defaultAvatar;
+            
+            // 更新基本信息
+            document.getElementById('user-name').textContent = user.username;
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-role').textContent = user.role === 'admin' ? '管理员' : user.role === 'developer' ? '开发者' : '普通用户';
+            document.getElementById('user-created-at').textContent = '注册时间: ' + formatDate(user.created_at);
+            
+            // 更新详细信息
+            document.getElementById('detail-username').textContent = user.username;
+            document.getElementById('detail-email').textContent = user.email;
+            document.getElementById('detail-created-at').textContent = formatDate(user.created_at);
+            document.getElementById('detail-role').textContent = user.role === 'admin' ? '管理员' : user.role === 'developer' ? '开发者' : '普通用户';
+            
+            // 如果是开发者，显示API密钥
+            if (user.role === 'developer') {
+                document.getElementById('api-key-section').classList.remove('hidden');
+                document.getElementById('api-key-value').value = user.api_key || '暂无API密钥';
+            } else {
+                document.getElementById('api-key-section').classList.add('hidden');
+            }
+        }
+        
+        // 获取用户角色文本
+        function getUserRoleText(role) {
+            switch (role) {
+                case 'admin':
+                    return '管理员';
+                case 'developer':
+                    return '开发者';
+                case 'user':
+                default:
+                    return '普通用户';
+            }
+        }
+        
+        // 格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // 更新认证UI
+        function updateAuthUI(userData) {
+            // 更新导航栏
+            document.getElementById('auth-buttons').classList.add('hidden');
+            document.getElementById('user-info').classList.remove('hidden');
+            document.getElementById('welcome-message').textContent = `欢迎, ${userData.username}`;
+            
+            // 更新页脚
+            document.getElementById('footer-login-link').parentElement.classList.add('hidden');
+            document.getElementById('footer-register-link').parentElement.classList.add('hidden');
+            document.getElementById('footer-user-section').classList.remove('hidden');
+            document.getElementById('footer-welcome-message').textContent = `欢迎, ${userData.username}`;
+        }
+        
+        // 复制API密钥
+        function copyApiKey() {
+            const apiKeyInput = document.getElementById('api-key-value');
+            apiKeyInput.select();
+            document.execCommand('copy');
+            
+            // 显示复制成功的提示
+            alert('API密钥已复制到剪贴板');
+        }
+        
+        // 修改头像
+        function changeAvatar() {
+            // 创建文件输入元素
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            
+            // 监听文件选择事件
+            fileInput.onchange = async function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                // 检查文件类型
+                if (!file.type.startsWith('image/')) {
+                    alert('请选择图片文件');
+                    return;
+                }
+                
+                // 检查文件大小（限制为2MB）
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('图片文件不能超过2MB');
+                    return;
+                }
+                
+                // 创建FormData对象用于上传
+                const formData = new FormData();
+                formData.append('avatar', file);
+                
+                try {
+                    // 显示上传中提示
+                    const avatarImg = document.getElementById('user-avatar');
+                    const originalSrc = avatarImg.src;
+                    avatarImg.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDFkMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItdXNlciI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNC00VjVhMiAyIDAgMCAxIDItMmgxNGEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJ6Ij48L3BhdGg+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxMiAxNSAxNSAxOCI+PC9wb2x5bGluZT48cGF0aCBkPSJNMTIgMTFTMTQgMTQgMTQgMTQiPjwvcGF0aD48L3N2Zz4=';
+                    
+                    // 上传头像到服务器
+                    const response = await fetch('http://localhost:3000/api/upload/avatar', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok && result.url) {
+                        // 获取当前用户信息
+                        const user = JSON.parse(localStorage.getItem('user'));
+                        if (!user) {
+                            alert('用户未登录');
+                            avatarImg.src = originalSrc;
+                            return;
+                        }
+                        
+                        // 更新用户头像URL
+                        let avatarUrl = result.url;
+                        console.log('原始URL:', avatarUrl);
+                        // 确保URL格式正确，移除可能存在的file:///前缀
+                        if (avatarUrl.startsWith('file:///')) {
+                            avatarUrl = avatarUrl.substring(8); // 移除 'file:///' 前缀
+                            console.log('移除file:///前缀后:', avatarUrl);
+                        }
+                        // 如果URL不是完整的URL，则构造完整的URL
+                        if (!avatarUrl.startsWith('http://') && !avatarUrl.startsWith('https://')) {
+                            console.log('URL不是完整的URL，需要构造');
+                            // 确保URL以 '/' 开头
+                            if (!avatarUrl.startsWith('/')) {
+                                avatarUrl = '/' + avatarUrl;
+                                console.log('添加/前缀后:', avatarUrl);
+                            }
+                            // 构造完整的URL
+                            avatarUrl = window.location.origin + avatarUrl;
+                            console.log('构造完整URL后:', avatarUrl);
+                        } else {
+                            console.log('URL已经是完整的URL:', avatarUrl);
+                        }
+                        
+                        // 发送更新请求到用户API
+                        const updateResult = await ApiService.updateUser(user.id, {
+                            avatar: avatarUrl
+                        });
+                        
+                        if (updateResult.success) {
+                            // 更新本地存储的用户信息
+                            const updatedUser = {...user, avatar: avatarUrl};
+                            localStorage.setItem('user', JSON.stringify(updatedUser));
+                            
+                            // 更新页面显示的用户信息
+                            displayUserInfo(updatedUser);
+                            
+                            alert('头像更新成功');
+                        } else {
+                            // 恢复原头像
+                            avatarImg.src = originalSrc;
+                            alert('头像更新失败: ' + updateResult.error);
+                        }
+                    } else {
+                        // 恢复原头像
+                        avatarImg.src = originalSrc;
+                        alert('头像上传失败: ' + (result.message || '未知错误'));
+                    }
+                } catch (error) {
+                    // 恢复原头像
+                    const avatarImg = document.getElementById('user-avatar');
+                    avatarImg.src = user.avatar || defaultAvatar;
+                    alert('头像上传失败: ' + error.message);
+                }
+            };
+            
+            // 触发文件选择
+            fileInput.click();
+        }
+        
+        // 更换头像预览
+        function changeAvatarPreview() {
+            // 创建文件输入元素
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            
+            // 监听文件选择事件
+            fileInput.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                // 检查文件类型
+                if (!file.type.startsWith('image/')) {
+                    alert('请选择图片文件');
+                    return;
+                }
+                
+                // 检查文件大小（限制为2MB）
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('图片文件不能超过2MB');
+                    return;
+                }
+                
+                // 创建预览URL
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // 显示预览
+                    document.getElementById('preview-avatar').src = event.target.result;
+                    
+                    // 保存文件引用以便后续上传
+                    document.getElementById('preview-avatar').file = file;
+                };
+                
+                reader.readAsDataURL(file);
+            };
+            
+            // 触发文件选择
+            fileInput.click();
+        }
+        
+        // 编辑资料
+        function editProfile() {
+            // 获取当前用户信息
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) {
+                alert('用户未登录');
+                return;
+            }
+            
+            // 填充表单数据
+            document.getElementById('edit-username').value = user.username;
+            document.getElementById('edit-email').value = user.email;
+            
+            // 设置预览头像
+            const previewAvatar = document.getElementById('preview-avatar');
+            previewAvatar.src = user.avatar || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QxZDFkMSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItdXNlciI+PHBhdGggZD0iTTIwIDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNC00VjVhMiAyIDAgMCAxIDItMmgxNGEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJ6Ij48L3BhdGg+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxMiAxNSAxNSAxOCI+PC9wb2x5bGluZT48cGF0aCBkPSJNMTIgMTFTMTQgMTQgMTQgMTQiPjwvcGF0aD48L3N2Zz4=';
+            
+            // 清除之前的文件引用
+            previewAvatar.file = null;
+            
+            // 隐藏用户详情，显示编辑表单
+            document.getElementById('user-details-section').classList.add('hidden');
+            document.getElementById('edit-profile-form').classList.remove('hidden');
+        }
+        
+        // 取消编辑资料
+        function cancelEditProfile() {
+            // 隐藏编辑表单，显示用户详情
+            document.getElementById('edit-profile-form').classList.add('hidden');
+            document.getElementById('user-details-section').classList.remove('hidden');
+        }
+        
+        // 修改密码
+        function changePassword() {
+            // 隐藏用户详情，显示修改密码表单
+            document.getElementById('user-details-section').classList.add('hidden');
+            document.getElementById('change-password-form').classList.remove('hidden');
+        }
+        
+        // 取消修改密码
+        function cancelChangePassword() {
+            // 清空表单
+            document.getElementById('password-form').reset();
+            
+            // 隐藏修改密码表单，显示用户详情
+            document.getElementById('change-password-form').classList.add('hidden');
+            document.getElementById('user-details-section').classList.remove('hidden');
+        }
+        
+        // 显示注销账户模态框
+        function showDeleteAccountModal() {
+            document.getElementById('delete-account-modal').classList.remove('hidden');
+        }
+        
+        // 关闭注销账户模态框
+        function closeDeleteAccountModal() {
+            document.getElementById('delete-account-modal').classList.add('hidden');
+        }
+        
+        // 注销账户
+        async function deleteAccount() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!user || !user.id) {
+                alert('用户信息不存在，请重新登录');
+                closeDeleteAccountModal();
+                return;
+            }
+            
+            // 确认是否真的要注销账户
+            if (!confirm('您确定要永久注销账户吗？此操作不可撤销。')) {
+                return;
+            }
+            
+            // 调用后端API注销账户
+            const result = await ApiService.deleteUser(user.id);
+            
+            if (result.success) {
+                // 清除本地存储的用户信息
+                localStorage.removeItem('user');
+                alert('账户已成功注销');
+                closeDeleteAccountModal();
+                window.location.href = 'home.html';
+            } else {
+                alert('注销账户失败: ' + result.error);
+            }
+        }
+        
+        // 显示退出登录模态框
+        function showLogoutModal() {
+            document.getElementById('logout-modal').classList.remove('hidden');
+        }
+        
+        // 关闭退出登录模态框
+        function closeLogoutModal() {
+            document.getElementById('logout-modal').classList.add('hidden');
+            // 清空输入框
+            document.getElementById('logout-email').value = '';
+            document.getElementById('logout-password').value = '';
+        }
+        
+        // 确认退出登录
+        function confirmLogout() {
+            const email = document.getElementById('logout-email').value;
+            const password = document.getElementById('logout-password').value;
+            
+            if (!email || !password) {
+                alert('请输入完整的邮箱和密码');
+                return;
+            }
+            
+            // 关闭第一个模态框，显示第二个确认模态框
+            closeLogoutModal();
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+        
+        // 关闭二次确认模态框
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+        }
+        
+        // 执行退出登录操作
+        async function performLogout() {
+            // 获取存储的用户信息
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!user || !user.id) {
+                alert('用户信息不存在，请重新登录');
+                closeConfirmModal();
+                return;
+            }
+            
+            try {
+                // 仅退出登录，不清除用户数据
+                // 清除本地存储的用户信息
+                localStorage.removeItem('user');
+                
+                // 退出登录成功
+                playSuccessSound();
+                
+                // 手动更新界面，隐藏用户信息，显示登录/注册按钮
+                // 更新导航栏
+                document.getElementById('auth-buttons').classList.remove('hidden');
+                document.getElementById('user-info').classList.remove('md:flex');
+                document.getElementById('user-info').classList.add('hidden');
+                
+                // 更新移动端导航栏
+                document.getElementById('mobile-auth-buttons').classList.remove('hidden');
+                document.getElementById('mobile-user-info').classList.add('hidden');
+                
+                // 更新移动端菜单
+                document.getElementById('mobile-auth-links').classList.remove('hidden');
+                document.getElementById('mobile-user-section').classList.add('hidden');
+                
+                // 更新页脚
+                document.getElementById('footer-links').classList.remove('hidden');
+                document.getElementById('footer-user-section').classList.add('hidden');
+                
+                // 关闭模态框
+                closeConfirmModal();
+                
+                // 跳转到首页
+                window.location.href = 'home.html';
+            } catch (error) {
+                // 网络错误
+                alert(`网络错误: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>
